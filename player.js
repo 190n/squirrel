@@ -30,8 +30,14 @@ class Player extends GameObject {
             this.flamethrowerOffset -= flamethrowerTurnRate * dt;
         }
 
-        if (!keyIsDown(p1RocketLeft) && !keyIsDown(p1RocketRight)) {
-            
+        if (!keyIsDown(p1RocketLeft) && !keyIsDown(p1RocketRight) && this.flamethrowerOffset !== 0) {
+            if (this.flamethrowerOffset > 0) {
+                this.flamethrowerOffset -= flamethrowerTurnRate * dt;
+                if (this.flamethrowerOffset < 0) this.flamethrowerOffset = 0;
+            } else if (this.flamethrowerOffset < 0) {
+                this.flamethrowerOffset += flamethrowerTurnRate * dt;
+                if (this.flamethrowerOffset > 0) this.flamethrowerOffset = 0;
+            }
         }
 
         this.flamethrowerOffset = max(min(this.flamethrowerOffset, flamethrowerMaxOffsetAngle), -flamethrowerMaxOffsetAngle);
@@ -46,9 +52,9 @@ class Player extends GameObject {
         GameObject.prototype.draw.call(this);
         if (keyIsDown(p1Rocket)) {
             push();
-            translate(this.x, this.y)
+            translate(this.x, this.y + 36)
             rotate(-this.flamethrowerOffset);
-            image(Player.flame0, 0, 90);
+            image(Player.flame0, 0, 54);
             pop();
         }
     }
