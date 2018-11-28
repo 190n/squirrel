@@ -3,12 +3,16 @@ let gameObjects = [],
 
 function preload() {
     Player.preload();
+    Level.preload();
 }
 
 function setup() {
     createCanvas(800, 800);
     imageMode(CENTER);
-    gameObjects = [new Player()];
+    rectMode(CENTER);
+    noSmooth();
+    let level = new Level();
+    gameObjects = [level, new Player(level)];
     lastFrame = Date.now();
 }
 
