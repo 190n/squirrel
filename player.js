@@ -26,8 +26,8 @@ class Player extends GameObject {
         if (this.onGround) {
             this.dx = applyForceAgainstMotion(this.dx, onGroundFriction * pixelsToMeter * dt);
         } else {
-            this.dx = applyForceAgainstMotion(this.dx, airResistance * this.dx * pixelsToMeter * dt);
-            this.dy = applyForceAgainstMotion(this.dy, airResistance * this.dy * pixelsToMeter * dt);
+            this.dx = applyForceAgainstMotion(this.dx, airResistance * Math.abs(this.dx) * pixelsToMeter * dt);
+            this.dy = applyForceAgainstMotion(this.dy, airResistance * Math.abs(this.dy) * pixelsToMeter * dt);
         }
 
         if (keyIsDown(p1RocketLeft)) {
@@ -78,7 +78,6 @@ class Player extends GameObject {
                 collidedAny = true;
                 if (this.sideEnteredFrom === null) {
                     this.sideEnteredFrom = getCollisionSide(this, plat);
-                    console.log(this.sideEnteredFrom);
                 }
 
                 if (this.sideEnteredFrom == 'up' && 'up' in plat.blocks) {
@@ -100,7 +99,6 @@ class Player extends GameObject {
         }
 
         if (!collidedAny) {
-            console.log('reset collision');
             this.onGround = false;
             this.sideEnteredFrom = null;
         }
