@@ -11,6 +11,7 @@ class Level extends GameObject {
 
     draw() {
         fill('black');
+        noStroke();
         for (let plat of this.data.platforms) {
             rect(plat.x, plat.y, plat.w, plat.h);
         }

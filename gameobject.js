@@ -3,8 +3,8 @@ class GameObject {
         this.sprite = sprite;
     }
 
-    draw() {
-        image(this.sprite, this.x, this.y);
+    draw(sprite) {
+        image(sprite === undefined ? this.sprite : sprite, this.x, this.y);
     }
 
     tick() {

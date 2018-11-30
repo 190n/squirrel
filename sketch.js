@@ -1,5 +1,11 @@
 let gameObjects = [],
-    lastFrame;
+    lastFrame,
+    rollingStart,
+    frameIter = 0,
+    fps = 0,
+    frameTimes = [];
+
+p5.disableFriendlyErrors = true;
 
 function preload() {
     Player.preload();
@@ -12,8 +18,10 @@ function setup() {
     rectMode(CENTER);
     noSmooth();
     let level = new Level();
-    gameObjects = [level, new Player(level)];
+    gameObjects = [level, new Player(level, 1), new Player(level, 2)];
     lastFrame = Date.now();
+    rollingStart = lastFrame;
+    frameRate(120);
 }
 
 function draw() {
@@ -24,6 +32,52 @@ function draw() {
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
         gameObjects[i].tick(dt);
+    }
+
+    if (showFps) {
+        frameIter++;
+        if (frameIter > 9) {
+            fps = Math.round(10000 / (now - rollingStart));
+            rollingStart = now;
+            frameIter = 0;
+        }
+
+        textSize(16);
+        textFont('monospace');
+        textAlign(LEFT, TOP);
+        text(fps.toString() + ' fps', 4, 4);
+    }
+
+    if (moreStats) {
+        textSize(8);
+        textAlign(LEFT, CENTER);
+        text('16.67ms (60fps)', 65, 33);
+        text('22.22ms (45fps)', 65, 44);
+        text('27.78ms (36fps)', 65, 56);
+        text('33.33ms (30fps)', 65, 67);
+
+        stroke(192);
+        line(0, 33, 64, 33);
+        line(0, 44, 64, 44);
+        line(0, 56, 64, 56);
+        line(0, 67, 64, 67);
+
+        frameTimes.push(now - lastFrame);
+        if (frameTimes.length > 32) frameTimes.shift();
+        for (let i = 0; i < frameTimes.length - 1; i++) {
+            if (frameTimes[i] > 17 || frameTimes[i + 1] > 17) stroke('red');
+            else stroke(0);
+            line(i * 2, frameTimes[i] * 2, i * 2 + 2, frameTimes[i + 1] * 2);
+        }
+
+        let nSlow = 0;
+        for (let ft of frameTimes) {
+            if (ft > 17) nSlow++;
+        }
+
+        let alpha = nSlow / 32;
+        fill('rgba(255, 0, 0, ' + alpha + ')');
+        rect(32, 50, 64, 34);
     }
 
     lastFrame = now;

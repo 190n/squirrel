@@ -4,18 +4,25 @@ class Player extends GameObject {
         Player.flame0 = loadImage('flame0.png');
     }
 
-    constructor(level) {
+    constructor(level, which) {
         super(Player.sprite);
         this.level = level;
-        this.x = 100;
+        this.which = which;
+        this.x = (which == 2 ? 700 : 100);
         this.y = 100;
-        this.w = 40;
+        this.w = 24;
         this.h = 72;
         this.dx = 0;
         this.dy = 0;
         this.flamethrowerOffset = 0;
         this.onGround = false;
         this.sideEnteredFrom = null;
+
+        if (this.which == 1) {
+            [this.rocket, this.rocketLeft, this.rocketRight] = [p1Rocket, p1RocketLeft, p1RocketRight];
+        } else if (this.which == 2) {
+            [this.rocket, this.rocketLeft, this.rocketRight] = [p2Rocket, p2RocketLeft, p2RocketRight];
+        }
     }
 
     tick(dt) {
@@ -30,15 +37,15 @@ class Player extends GameObject {
             this.dy = applyForceAgainstMotion(this.dy, airResistance * Math.abs(this.dy) * pixelsToMeter * dt);
         }
 
-        if (keyIsDown(p1RocketLeft)) {
+        if (keyIsDown(this.rocketLeft)) {
             this.flamethrowerOffset += flamethrowerTurnRate * dt;
         }
 
-        if (keyIsDown(p1RocketRight)) {
+        if (keyIsDown(this.rocketRight)) {
             this.flamethrowerOffset -= flamethrowerTurnRate * dt;
         }
 
-        if (!keyIsDown(p1RocketLeft) && !keyIsDown(p1RocketRight) && this.flamethrowerOffset !== 0) {
+        if (!keyIsDown(this.rocketLeft) && !keyIsDown(this.rocketRight) && this.flamethrowerOffset !== 0) {
             if (this.flamethrowerOffset > 0) {
                 this.flamethrowerOffset -= flamethrowerTurnRate * dt;
                 if (this.flamethrowerOffset < 0) this.flamethrowerOffset = 0;
@@ -50,7 +57,7 @@ class Player extends GameObject {
 
         this.flamethrowerOffset = max(min(this.flamethrowerOffset, flamethrowerMaxOffsetAngle), -flamethrowerMaxOffsetAngle);
 
-        if (keyIsDown(p1Rocket)) {
+        if (keyIsDown(this.rocket)) {
             this.dy -= flamethrowerAccel * dt * cos(this.flamethrowerOffset);
             this.dx -= flamethrowerAccel * dt * sin(this.flamethrowerOffset);
         }
@@ -59,8 +66,8 @@ class Player extends GameObject {
     }
 
     draw() {
-        GameObject.prototype.draw.call(this);
-        if (keyIsDown(p1Rocket)) {
+        image(this.sprite, this.x - 2, this.y);
+        if (keyIsDown(this.rocket)) {
             push();
             translate(this.x, this.y + 36)
             rotate(-this.flamethrowerOffset);
@@ -82,7 +89,7 @@ class Player extends GameObject {
 
                 if (this.sideEnteredFrom == 'up' && 'up' in plat.blocks) {
                     this.dy *= -plat.blocks.up;
-                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && keyIsDown(p1Rocket))) {
+                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && keyIsDown(this.rocket))) {
                     if (this.dy > 0) {
                         this.y = plat.y - plat.h / 2 - this.h / 2;
                         this.onGround = true;
