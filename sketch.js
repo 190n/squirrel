@@ -64,9 +64,8 @@ function draw() {
 
         frameTimes.push(now - lastFrame);
         if (frameTimes.length > 32) frameTimes.shift();
+        stroke(0);
         for (let i = 0; i < frameTimes.length - 1; i++) {
-            if (frameTimes[i] > 17 || frameTimes[i + 1] > 17) stroke('red');
-            else stroke(0);
             line(i * 2, frameTimes[i] * 2, i * 2 + 2, frameTimes[i + 1] * 2);
         }
 
@@ -74,10 +73,6 @@ function draw() {
         for (let ft of frameTimes) {
             if (ft > 17) nSlow++;
         }
-
-        let alpha = nSlow / 32;
-        fill('rgba(255, 0, 0, ' + alpha + ')');
-        rect(32, 50, 64, 34);
     }
 
     lastFrame = now;
