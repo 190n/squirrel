@@ -81,7 +81,7 @@ class Player extends GameObject {
             if (this.facing == 'left') launchAngle = Math.PI - launchAngle;
             let dx = bulletLaunchVelocity * cos(launchAngle),
                 dy = bulletLaunchVelocity * sin(launchAngle);
-            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
+            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which, this.level));
             this.shootTimer = 0;
         }
 

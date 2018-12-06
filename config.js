@@ -13,4 +13,5 @@ const squirrelMass = 0.3,
     bulleLifetime = 5, // seconds
     bulletLaunchVelocity = 7.5 * pixelsToMeter,
     bulletDefaultLaunchAngle = Math.PI / -9, // 20°
-    bulletMaxLaunchAngle = Math.PI / -3; // 60° up or down (only when player launches bullet up or down)
+    bulletMaxLaunchAngle = Math.PI / -3, // 60° up or down (only when player launches bullet up or down)
+    maxDeltaTime = 0.05; // seconds

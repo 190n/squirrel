@@ -28,7 +28,7 @@ function setup() {
 function draw() {
     background(255);
     let now = Date.now(),
-        dt = (now - lastFrame) / 1000;
+        dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
