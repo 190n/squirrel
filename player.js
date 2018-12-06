@@ -1,11 +1,16 @@
 class Player extends GameObject {
     static preload() {
         Player.sprite = loadImage('sq_right.png');
+        Player.sp1l = loadImage('p1_left.png');
+        Player.sp1r = loadImage('p1_right.png');
+        Player.sp2l = loadImage('p2_left.png');
+        Player.sp2r = loadImage('p2_right.png');
         Player.flame0 = loadImage('flame0.png');
     }
 
     constructor(level, which) {
-        super(Player.sprite);
+        super(which == 2 ? Player.sp2r : Player.sp1r);
+        this.facing = 'right';
         this.level = level;
         this.which = which;
         this.x = (which == 2 ? 700 : 100);
@@ -17,32 +22,35 @@ class Player extends GameObject {
         this.flamethrowerOffset = 0;
         this.onGround = false;
         this.sideEnteredFrom = null;
+        this.shootTimer = -1; // negative = can shoot. if it isn't negative, it will count up in real time and be reset after configurable delay
 
         if (this.which == 1) {
-            [this.rocket, this.rocketLeft, this.rocketRight] = [p1Rocket, p1RocketLeft, p1RocketRight];
+            [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p1Rocket, p1RocketLeft, p1RocketRight, p1Shoot, p1ShootDown];
         } else if (this.which == 2) {
-            [this.rocket, this.rocketLeft, this.rocketRight] = [p2Rocket, p2RocketLeft, p2RocketRight];
+            [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p2Rocket, p2RocketLeft, p2RocketRight, p2Shoot, p2ShootDown];
         }
     }
 
     tick(dt) {
-        this.x += this.dx * dt;
-        this.y += this.dy * dt;
-        this.dy += gravity * pixelsToMeter * dt;
+        this.move(dt);
+        this.doGravity(dt);
 
         if (this.onGround) {
             this.dx = applyForceAgainstMotion(this.dx, onGroundFriction * pixelsToMeter * dt);
         } else {
-            this.dx = applyForceAgainstMotion(this.dx, airResistance * Math.abs(this.dx) * pixelsToMeter * dt);
-            this.dy = applyForceAgainstMotion(this.dy, airResistance * Math.abs(this.dy) * pixelsToMeter * dt);
+            this.doAirResistance(dt);
         }
 
         if (keyIsDown(this.rocketLeft)) {
             this.flamethrowerOffset += flamethrowerTurnRate * dt;
+            this.facing = 'left';
+            this.sprite = (this.which == 2 ? Player.sp2l : Player.sp1l);
         }
 
         if (keyIsDown(this.rocketRight)) {
             this.flamethrowerOffset -= flamethrowerTurnRate * dt;
+            this.facing = 'right';
+            this.sprite = (this.which == 2 ? Player.sp2r : Player.sp1r);
         }
 
         if (!keyIsDown(this.rocketLeft) && !keyIsDown(this.rocketRight) && this.flamethrowerOffset !== 0) {
@@ -62,11 +70,31 @@ class Player extends GameObject {
             this.dx -= flamethrowerAccel * dt * sin(this.flamethrowerOffset);
         }
 
+        if (keyIsDown(this.shoot) && this.shootTimer < 0) {
+            let launchAngle = bulletDefaultLaunchAngle;
+            if (keyIsDown(this.rocket)) {
+                launchAngle = bulletMaxLaunchAngle;
+            }
+            if (keyIsDown(this.shootDown)) {
+                launchAngle = -bulletMaxLaunchAngle;
+            }
+            if (this.facing == 'left') launchAngle = Math.PI - launchAngle;
+            let dx = bulletLaunchVelocity * cos(launchAngle),
+                dy = bulletLaunchVelocity * sin(launchAngle);
+            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
+            this.shootTimer = 0;
+        }
+
+        if (this.shootTimer >= 0) {
+            this.shootTimer += dt;
+            if (this.shootTimer >= timePerBullet) this.shootTimer = -1;
+        }
+
         this.collideLevel();
     }
 
     draw() {
-        image(this.sprite, this.x - 2, this.y);
+        image(this.sprite, this.x + (this.facing == 'left' ? 2 : -2), this.y);
         if (keyIsDown(this.rocket)) {
             push();
             translate(this.x, this.y + 36)

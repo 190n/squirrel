@@ -1,6 +1,10 @@
 const p1Rocket = 87, // W
     p1RocketLeft = 65, // A
     p1RocketRight = 68, // D
+    p1Shoot = 70, // F
+    p1ShootDown = 83, // S
     p2Rocket = 73, // I
     p2RocketLeft = 74, // J
-    p2RocketRight = 76; // L
+    p2RocketRight = 76, // L
+    p2Shoot = 72, // H
+    p2ShootDown = 75; // K

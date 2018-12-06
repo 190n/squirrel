@@ -10,6 +10,7 @@ p5.disableFriendlyErrors = true;
 function preload() {
     Player.preload();
     Level.preload();
+    Bullet.preload();
 }
 
 function setup() {
@@ -76,4 +77,8 @@ function draw() {
     }
 
     lastFrame = now;
+}
+
+function removeObject(o) {
+    gameObjects = gameObjects.filter(go => go != o);
 }
