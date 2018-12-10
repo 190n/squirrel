@@ -3,7 +3,8 @@ let gameObjects = [],
     rollingStart,
     frameIter = 0,
     fps = 0,
-    frameTimes = [];
+    frameTimes = [],
+    globalObjects = {};
 
 p5.disableFriendlyErrors = true;
 
@@ -18,8 +19,11 @@ function setup() {
     imageMode(CENTER);
     rectMode(CENTER);
     noSmooth();
-    let level = new Level();
-    gameObjects = [level, new Player(level, 1), new Player(level, 2)];
+    let level = new Level(),
+        p1 = new Player(1),
+        p2 = new Player(2);
+    gameObjects = [level, p1, p2];
+    globalObjects = {level, p1, p2};
     lastFrame = Date.now();
     rollingStart = lastFrame;
     frameRate(120);
@@ -43,6 +47,9 @@ function draw() {
             frameIter = 0;
         }
 
+        fill(0);
+        noStroke();
+        strokeWeight(1);
         textSize(16);
         textFont('monospace');
         textAlign(LEFT, TOP);

@@ -8,10 +8,9 @@ class Player extends GameObject {
         Player.flame0 = loadImage('flame0.png');
     }
 
-    constructor(level, which) {
+    constructor(which) {
         super(which == 2 ? Player.sp2r : Player.sp1r);
         this.facing = 'right';
-        this.level = level;
         this.which = which;
         this.x = (which == 2 ? 700 : 100);
         this.y = 100;
@@ -81,7 +80,7 @@ class Player extends GameObject {
             if (this.facing == 'left') launchAngle = Math.PI - launchAngle;
             let dx = bulletLaunchVelocity * cos(launchAngle),
                 dy = bulletLaunchVelocity * sin(launchAngle);
-            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which, this.level));
+            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
             this.shootTimer = 0;
         }
 
@@ -107,7 +106,7 @@ class Player extends GameObject {
     collideLevel() {
         let collidedAny = false;
 
-        for (let plat of this.level.data.platforms) {
+        for (let plat of globalObjects.level.data.platforms) {
             if (bboxCollide(this, plat)) {
                 // they collide
                 collidedAny = true;
@@ -137,5 +136,10 @@ class Player extends GameObject {
             this.onGround = false;
             this.sideEnteredFrom = null;
         }
+    }
+
+    collideBullet(b) {
+        this.dx += (bulletMass * b.dx) / squirrelMass;
+        this.dy += (bulletMass * b.dy) / squirrelMass;
     }
 }
