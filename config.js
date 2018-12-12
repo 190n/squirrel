@@ -19,4 +19,5 @@ const squirrelMass = 0.3,
     bulletIterations = 1,
     p1BulletTrailColor = 'rgba(153, 204, 255, ',
     p2BulletTrailColor = 'rgba(255, 153, 153, ',
-    bulletTrailLength = 3;
+    bulletTrailLength = 3,
+    playerDySpriteThreshold = 100;

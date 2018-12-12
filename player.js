@@ -1,6 +1,6 @@
 class Player extends GameObject {
     static preload() {
-        Player.sprite = loadImage('sq_right.png');
+        Player.sprite = loadImage('player.gif');
         Player.sp1l = loadImage('p1_left.png');
         Player.sp1r = loadImage('p1_right.png');
         Player.sp2l = loadImage('p2_left.png');
@@ -93,7 +93,17 @@ class Player extends GameObject {
     }
 
     draw() {
-        image(this.sprite, this.x + (this.facing == 'left' ? 2 : -2), this.y);
+        let row = (this.facing == 'left' ? 0 : 1),
+            col = (this.which == 1 ? 0 : 3);
+
+        if (Math.abs(this.dy) < playerDySpriteThreshold) {
+            col++;
+        } else if (this.dy < 0) {
+            col += 2;
+        }
+
+        image(Player.sprite, this.x + (this.facing == 'left' ? 6 : -6), this.y + 4, 68, 80, col * 68, row * 80, 68, 80);
+
         if (keyIsDown(this.rocket)) {
             push();
             translate(this.x, this.y + 36)
