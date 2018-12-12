@@ -25,10 +25,14 @@ class Bullet extends GameObject {
 
         this.gfx = createGraphics(800, 800);
         this.gfx.blendMode(ADD);
-        this.gfx.fill('#101010');
+        this.gfx.fill('rgba(0, 0, 0, 0.0625)');
         this.gfx.strokeWeight(2);
         this.gfx.strokeCap(SQUARE);
         this.gfx.stroke(this.trailColor);
+        this.minX = this.x - 2;
+        this.maxX = this.x + 2;
+        this.minY = this.y - 2;
+        this.maxY = this.y + 2;
     }
 
     tick(dt) {
@@ -59,7 +63,25 @@ class Bullet extends GameObject {
 
     draw() {
         this.gfx.line(this.x, this.y, this.lastX, this.lastY);
-        this.gfx.rect(0, 0, 800, 800);
+
+        if (this.x + 2 > this.maxX) this.maxX = this.x + 2;
+        if (this.x - 2 < this.minX) this.minX = this.x - 2;
+        if (this.y + 2 > this.maxY) this.maxY = this.y + 2;
+        if (this.y - 2 < this.minY) this.minY = this.y - 2;
+
+        this.maxX = Math.min(800, this.maxX);
+        this.minX = Math.max(0, this.minX);
+        this.maxY = Math.min(800, this.maxY);
+        this.minY = Math.min(0, this.minY);
+
+        this.gfx.loadPixels();
+        for (let x = this.minX; x < this.maxX; x++) {
+            for (let y = this.minY; y < this.maxY; y++) {
+                this.gfx.pixels[(y * 800 + x) * 4 + 3] -= 16;
+            }
+        }
+        this.gfx.updatePixels();
+
 
         image(this.gfx, 400, 400);
 
