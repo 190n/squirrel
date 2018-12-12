@@ -14,8 +14,6 @@ class Bullet extends GameObject {
         this.dy = dy;
         this.firedBy = firedBy;
         this.age = 0;
-        this.lastX = x;
-        this.lastY = y;
 
         if (firedBy == 1) {
             [this.target, this.trailColor] = [globalObjects.p2, p1BulletTrailColor];
@@ -23,21 +21,11 @@ class Bullet extends GameObject {
             [this.target, this.trailColor] = [globalObjects.p1, p2BulletTrailColor];
         }
 
-        this.gfx = createGraphics(800, 800);
-        this.gfx.blendMode(ADD);
-        this.gfx.fill('rgba(0, 0, 0, 0.0625)');
-        this.gfx.strokeWeight(2);
-        this.gfx.strokeCap(SQUARE);
-        this.gfx.stroke(this.trailColor);
-        this.minX = this.x - 2;
-        this.maxX = this.x + 2;
-        this.minY = this.y - 2;
-        this.maxY = this.y + 2;
+        this.trailPoints = [];
     }
 
     tick(dt) {
-        this.lastX = this.x;
-        this.lastY = this.y;
+        this.trailPoints.unshift([this.x, this.y]);
         dt /= bulletIterations;
         for (let i = 0; i < bulletIterations; i++) {
             this.move(dt);
@@ -62,34 +50,19 @@ class Bullet extends GameObject {
     }
 
     draw() {
-        this.gfx.line(this.x, this.y, this.lastX, this.lastY);
-
-        if (this.x + 2 > this.maxX) this.maxX = this.x + 2;
-        if (this.x - 2 < this.minX) this.minX = this.x - 2;
-        if (this.y + 2 > this.maxY) this.maxY = this.y + 2;
-        if (this.y - 2 < this.minY) this.minY = this.y - 2;
-
-        this.maxX = Math.min(800, this.maxX);
-        this.minX = Math.max(0, this.minX);
-        this.maxY = Math.min(800, this.maxY);
-        this.minY = Math.min(0, this.minY);
-
-        this.gfx.loadPixels();
-        for (let x = this.minX; x < this.maxX; x++) {
-            for (let y = this.minY; y < this.maxY; y++) {
-                this.gfx.pixels[(y * 800 + x) * 4 + 3] -= 16;
-            }
+        strokeWeight(4);
+        for (let i = 0; i < this.trailPoints.length - 1; i++) {
+            let alpha = 1 - (i / bulletTrailLength / bulletIterations);
+            stroke(this.trailColor + alpha.toString() + ')');
+            line(this.trailPoints[i][0], this.trailPoints[i][1], this.trailPoints[i + 1][0], this.trailPoints[i + 1][1]);
         }
-        this.gfx.updatePixels();
 
-
-        image(this.gfx, 400, 400);
+        while (this.trailPoints.length > bulletTrailLength * bulletIterations) this.trailPoints.pop();
 
         GameObject.prototype.draw.call(this);
     }
 
     destroy() {
         removeObject(this);
-        this.gfx.remove();
     }
 }
