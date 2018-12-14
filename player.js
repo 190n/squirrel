@@ -12,8 +12,6 @@ class Player extends GameObject {
         super(which == 2 ? Player.sp2r : Player.sp1r);
         this.facing = 'right';
         this.which = which;
-        this.x = (which == 2 ? 700 : 100);
-        this.y = 100;
         this.w = 24;
         this.h = 72;
         this.dx = 0;
@@ -28,6 +26,10 @@ class Player extends GameObject {
         } else if (this.which == 2) {
             [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p2Rocket, p2RocketLeft, p2RocketRight, p2Shoot, p2ShootDown];
         }
+    }
+
+    spawn() {
+        Object.assign(this, globalObjects.level.data.spawns[this.which.toString()]);
     }
 
     tick(dt) {

@@ -1,6 +1,7 @@
 let gameObjects = [],
     lastFrame,
     rollingStart,
+    camera,
     frameIter = 0,
     fps = 0,
     frameTimes = [],
@@ -15,7 +16,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(800, 800);
+    createCanvas(windowWidth, windowHeight);
     imageMode(CENTER);
     rectMode(CENTER);
     noSmooth();
@@ -24,6 +25,9 @@ function setup() {
         p2 = new Player(2);
     gameObjects = [level, p1, p2];
     globalObjects = {level, p1, p2};
+    p1.spawn();
+    p2.spawn();
+    camera = new Camera();
     lastFrame = Date.now();
     rollingStart = lastFrame;
     frameRate(120);
@@ -31,6 +35,8 @@ function setup() {
 
 function draw() {
     background(255);
+    camera.move();
+    camera.transformCanvas();
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
@@ -88,4 +94,8 @@ function draw() {
 
 function removeObject(o) {
     gameObjects = gameObjects.filter(go => go != o);
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }
