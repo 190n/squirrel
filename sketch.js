@@ -35,15 +35,8 @@ function setup() {
 
 function draw() {
     background(255);
-    camera.move();
-    camera.transformCanvas();
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
-
-    for (let i = 0; i < gameObjects.length; i++) {
-        gameObjects[i].draw();
-        gameObjects[i].tick(dt);
-    }
 
     if (showFps) {
         frameIter++;
@@ -87,6 +80,14 @@ function draw() {
         for (let ft of frameTimes) {
             if (ft > 17) nSlow++;
         }
+    }
+
+    camera.move();
+    camera.transformCanvas();
+
+    for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].draw();
+        gameObjects[i].tick(dt);
     }
 
     lastFrame = now;

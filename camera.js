@@ -17,17 +17,19 @@ class Camera {
             hmin = Math.abs(y2 - y1) + cameraPadding,
             wadj = (wmin / hmin > ratio ? wmin : ratio * hmin);
 
-        this.factor = Math.min(windowWidth / wadj, cameraMaxZoom);
-        this.x = (x1 + x2) / 2;
-        this.y = (y1 + y2) / 2;
+        this.idealFactor = Math.min(windowWidth / wadj, cameraMaxZoom);
+        this.idealX = (x1 + x2) / 2;
+        this.idealY = (y1 + y2) / 2;
+
+        this.x += cameraCorrectionFactor * (this.idealX - this.x);
+        this.y += cameraCorrectionFactor * (this.idealY - this.y);
+        this.factor += cameraCorrectionFactor * (this.idealFactor - this.factor);
     }
 
     transformCanvas() {
         resetMatrix();
-        translate(-this.x + windowWidth / 2 / this.factor, -this.y + windowHeight / 2 / this.factor);
+        translate(windowWidth / 2, windowHeight / 2);
         scale(this.factor);
-        // noFill();
-        // stroke(0);
-        // rect(this.x, this.y, windowWidth / this.factor, windowHeight / this.factor);
+        translate(-this.x, -this.y);
     }
 }

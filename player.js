@@ -1,10 +1,6 @@
 class Player extends GameObject {
     static preload() {
         Player.sprite = loadImage('player.gif');
-        Player.sp1l = loadImage('p1_left.png');
-        Player.sp1r = loadImage('p1_right.png');
-        Player.sp2l = loadImage('p2_left.png');
-        Player.sp2r = loadImage('p2_right.png');
         Player.flame0 = loadImage('flame0.png');
     }
 
