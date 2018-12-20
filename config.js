@@ -23,4 +23,6 @@ const squirrelMass = 0.3,
     playerDySpriteThreshold = 100,
     cameraPadding = 400,
     cameraMaxZoom = 1.5,
-    cameraCorrectionFactor = 0.05;
+    cameraCorrectionFactor = 0.1,
+    playerFuelDrain = 1/6, // maximum fuel is 1 unit; this is units/sec
+    playerFuelRefillRate = 1; // units/sec

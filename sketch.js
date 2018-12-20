@@ -23,7 +23,7 @@ function setup() {
     let level = new Level(),
         p1 = new Player(1),
         p2 = new Player(2);
-    gameObjects = [level, p1, p2];
+    gameObjects = [level, p1, p2, new HUD()];
     globalObjects = {level, p1, p2};
     p1.spawn();
     p2.spawn();

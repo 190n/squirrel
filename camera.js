@@ -1,9 +1,12 @@
 class Camera {
     constructor() {
-        this.x = windowWidth / 2;
-        this.y = windowHeight / 2;
-
+        this.x = 0;
+        this.y = 0;
         this.factor = 1;
+        this.move();
+        this.x = this.idealX;
+        this.y = this.idealY;
+        this.factor = this.idealFactor;
     }
 
     move() {
