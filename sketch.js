@@ -2,17 +2,21 @@ let gameObjects = [],
     lastFrame,
     rollingStart,
     camera,
+    hud,
     frameIter = 0,
     fps = 0,
     frameTimes = [],
-    globalObjects = {};
+    globalObjects = {},
+    font04b03;
 
 p5.disableFriendlyErrors = true;
 
 function preload() {
     Player.preload();
     Level.preload();
-    Bullet.preload();
+    HUD.preload();
+
+    font04b03 = loadFont('04b03.ttf');
 }
 
 function setup() {
@@ -23,7 +27,8 @@ function setup() {
     let level = new Level(),
         p1 = new Player(1),
         p2 = new Player(2);
-    gameObjects = [level, p1, p2, new HUD()];
+    gameObjects = [level, p1, p2];
+    hud = new HUD();
     globalObjects = {level, p1, p2};
     p1.spawn();
     p2.spawn();
@@ -38,6 +43,18 @@ function draw() {
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
+    camera.move();
+    camera.transformCanvas();
+
+    for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].draw();
+        gameObjects[i].tick(dt);
+    }
+
+    resetMatrix();
+
+    hud.draw();
+
     if (showFps) {
         frameIter++;
         if (frameIter > 9) {
@@ -51,43 +68,35 @@ function draw() {
         strokeWeight(1);
         textSize(16);
         textFont('monospace');
-        textAlign(LEFT, TOP);
-        text(fps.toString() + ' fps', 4, 4);
+        textAlign(LEFT, BOTTOM);
+        text(fps.toString() + ' fps', 4, windowHeight - 4);
     }
 
     if (moreStats) {
         textSize(8);
-        textAlign(LEFT, CENTER);
-        text('16.67ms (60fps)', 65, 33);
-        text('22.22ms (45fps)', 65, 44);
-        text('27.78ms (36fps)', 65, 56);
-        text('33.33ms (30fps)', 65, 67);
+        textAlign(RIGHT, CENTER);
+        text('16.67ms (60fps)', windowWidth - 65, windowHeight - 33);
+        text('22.22ms (45fps)', windowWidth - 65, windowHeight - 44);
+        text('27.78ms (36fps)', windowWidth - 65, windowHeight - 56);
+        text('33.33ms (30fps)', windowWidth - 65, windowHeight - 67);
 
         stroke(192);
-        line(0, 33, 64, 33);
-        line(0, 44, 64, 44);
-        line(0, 56, 64, 56);
-        line(0, 67, 64, 67);
+        line(windowWidth - 64, windowHeight - 33, windowWidth, windowHeight - 33);
+        line(windowWidth - 64, windowHeight - 44, windowWidth, windowHeight - 44);
+        line(windowWidth - 64, windowHeight - 56, windowWidth, windowHeight - 56);
+        line(windowWidth - 64, windowHeight - 67, windowWidth, windowHeight - 67);
 
         frameTimes.push(now - lastFrame);
         if (frameTimes.length > 32) frameTimes.shift();
         stroke(0);
         for (let i = 0; i < frameTimes.length - 1; i++) {
-            line(i * 2, frameTimes[i] * 2, i * 2 + 2, frameTimes[i + 1] * 2);
+            line(windowWidth - i * 2, windowHeight - frameTimes[i] * 2, windowWidth - i * 2 - 2, windowHeight - frameTimes[i + 1] * 2);
         }
 
         let nSlow = 0;
         for (let ft of frameTimes) {
             if (ft > 17) nSlow++;
         }
-    }
-
-    camera.move();
-    camera.transformCanvas();
-
-    for (let i = 0; i < gameObjects.length; i++) {
-        gameObjects[i].draw();
-        gameObjects[i].tick(dt);
     }
 
     lastFrame = now;

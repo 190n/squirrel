@@ -1,8 +1,4 @@
 class Bullet extends GameObject {
-    static preload() {
-        Bullet.sprite1 = loadImage('data:image/gif;base64,R0lGODlhCAAIAPAAAAAAZgAAACH5BAAAAAAALAAAAAAIAAgAAAIHhI+py+1dAAA7');
-        Bullet.sprite2 = loadImage('data:image/gif;base64,R0lGODlhCAAIAPAAAGYAAAAAACH5BAAAAAAALAAAAAAIAAgAAAIHhI+py+1dAAA7');
-    }
 
     constructor(x, y, dx, dy, firedBy) {
         super(firedBy == 2 ? Bullet.sprite2 : Bullet.sprite1);
@@ -16,9 +12,9 @@ class Bullet extends GameObject {
         this.age = 0;
 
         if (firedBy == 1) {
-            [this.target, this.trailColor] = [globalObjects.p2, p1BulletTrailColor];
+            [this.target, this.trailColor, this.color] = [globalObjects.p2, p1BulletTrailColor, p1BulletColor];
         } else if (firedBy == 2) {
-            [this.target, this.trailColor] = [globalObjects.p1, p2BulletTrailColor];
+            [this.target, this.trailColor, this.color] = [globalObjects.p1, p2BulletTrailColor, p2BulletColor];
         }
 
         this.trailPoints = [];
@@ -59,7 +55,9 @@ class Bullet extends GameObject {
 
         while (this.trailPoints.length > bulletTrailLength * bulletIterations) this.trailPoints.pop();
 
-        GameObject.prototype.draw.call(this);
+        fill(this.color);
+        noStroke();
+        rect(this.x, this.y, this.w, this.h);
     }
 
     destroy() {
