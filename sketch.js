@@ -7,6 +7,7 @@ let gameObjects = [],
     fps = 0,
     frameTimes = [],
     globalObjects = {},
+    gameStarted = false,
     font04b03;
 
 p5.disableFriendlyErrors = true;
@@ -15,6 +16,7 @@ function preload() {
     Player.preload();
     Level.preload();
     HUD.preload();
+    HowToPlay.preload();
 
     font04b03 = loadFont('04b03.ttf');
 }
@@ -24,6 +26,14 @@ function setup() {
     imageMode(CENTER);
     rectMode(CENTER);
     noSmooth();
+    // gameObjects = [new HowToPlay()];
+    startGame();
+    lastFrame = Date.now();
+    rollingStart = lastFrame;
+    frameRate(120);
+}
+
+function startGame() {
     let level = new Level(),
         p1 = new Player(1),
         p2 = new Player(2);
@@ -33,18 +43,18 @@ function setup() {
     p1.spawn();
     p2.spawn();
     camera = new Camera();
-    lastFrame = Date.now();
-    rollingStart = lastFrame;
-    frameRate(120);
+    gameStarted = true;
 }
 
 function draw() {
-    background(255);
+    background('#6699ff');
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
-    camera.move();
-    camera.transformCanvas();
+    if (gameStarted) {
+        camera.move();
+        camera.transformCanvas();
+    }
 
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
@@ -53,7 +63,9 @@ function draw() {
 
     resetMatrix();
 
-    hud.draw();
+    if (gameStarted) {
+        hud.draw();
+    }
 
     if (showFps) {
         frameIter++;
