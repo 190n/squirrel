@@ -34,3 +34,43 @@ function applyForceAgainstMotion(v, accel) {
 
     return newV;
 }
+
+function closestWithinScreen(x, y, padding=0) {
+    // adopted from https://stackoverflow.com/a/1585620
+    let cenX = windowWidth / 2,
+        cenY = windowHeight / 2,
+        w = windowWidth - padding * 2,
+        h = windowHeight - padding * 2,
+        s = (y - cenY) / (x - cenX);
+
+    // flip coordinates around center to fix algorithm
+    x = x;
+    y = 2 * cenY - y;
+    let intX = null, intY = null;
+
+    if (-h / 2 <= s * w / 2 && s * w / 2 <= h / 2) {
+        // right or left edge
+        if (x > cenX) {
+            // right edge
+            intX = cenX + w / 2;
+            intY = cenY + s * w / 2;
+        } else if (x < cenX) {
+            // left edge
+            intX = cenX - w / 2;
+            intY = cenY - s * w / 2;
+        }
+    } else if (-w / 2 <= (h / 2) / s && (h / 2) / s <= w / 2) {
+        // top or bottom edge
+        if (y > cenY) {
+            // top edge
+            intY = cenY - h / 2;
+            intX = cenX - (h / 2) / s;
+        } else if (y < cenY) {
+            // bottom edge
+            intY = cenY + h / 2;
+            intX = cenX + (h / 2) / s;
+        }
+    }
+
+    return [intX, intY];
+}

@@ -50,14 +50,14 @@ class Bullet extends GameObject {
         for (let i = 0; i < this.trailPoints.length - 1; i++) {
             let alpha = 1 - (i / bulletTrailLength / bulletIterations);
             stroke(this.trailColor + alpha.toString() + ')');
-            line(this.trailPoints[i][0], this.trailPoints[i][1], this.trailPoints[i + 1][0], this.trailPoints[i + 1][1]);
+            line(this.trailPoints[i][0] << 0, this.trailPoints[i][1] << 0, this.trailPoints[i + 1][0] << 0, this.trailPoints[i + 1][1] << 0);
         }
 
         while (this.trailPoints.length > bulletTrailLength * bulletIterations) this.trailPoints.pop();
 
         fill(this.color);
         noStroke();
-        rect(this.x, this.y, this.w, this.h);
+        rect(this.x << 0, this.y << 0, this.w, this.h);
     }
 
     destroy() {

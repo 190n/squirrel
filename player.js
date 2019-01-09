@@ -17,6 +17,8 @@ class Player extends GameObject {
         this.sideEnteredFrom = null;
         this.shootTimer = -1; // negative = can shoot. if it isn't negative, it will count up in real time and be reset after configurable delay
         this.fuel = 1;
+        this.ammo = playerMaxAmmo;
+        this.reloadTimer = -1;
 
         if (this.which == 1) {
             [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p1Rocket, p1RocketLeft, p1RocketRight, p1Shoot, p1ShootDown];
@@ -73,7 +75,7 @@ class Player extends GameObject {
             this.fuel -= playerFuelDrain * dt;
         }
 
-        if (keyIsDown(this.shoot) && this.shootTimer < 0) {
+        if (keyIsDown(this.shoot) && this.shootTimer < 0 && this.ammo > 0) {
             let launchAngle = bulletDefaultLaunchAngle;
             if (keyIsDown(this.rocket)) {
                 launchAngle = bulletMaxLaunchAngle;
@@ -86,6 +88,10 @@ class Player extends GameObject {
                 dy = bulletLaunchVelocity * sin(launchAngle);
             gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
             this.shootTimer = 0;
+            this.ammo--;
+            if (this.ammo == 0) {
+                this.reloadTimer = 0;
+            }
         }
 
         if (this.shootTimer >= 0) {
@@ -93,7 +99,19 @@ class Player extends GameObject {
             if (this.shootTimer >= timePerBullet) this.shootTimer = -1;
         }
 
+        if (this.reloadTimer >= 0) {
+            this.reloadTimer += dt;
+            if (this.reloadTimer >= playerAmmoRefillTime) {
+                this.reloadTimer = -1;
+                this.ammo = playerMaxAmmo;
+            }
+        }
+
         this.collideLevel();
+
+        if (!bboxCollide(this, globalObjects.level.data.safeZone)) {
+            playerLost(this);
+        }
     }
 
     draw() {
@@ -106,11 +124,11 @@ class Player extends GameObject {
             col += 2;
         }
 
-        image(Player.sprite, this.x + (this.facing == 'left' ? 6 : -6), this.y + 4, 68, 80, col * 68, row * 80, 68, 80);
+        image(Player.sprite, (this.x << 0) + (this.facing == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
 
         if (keyIsDown(this.rocket) && this.fuel > 0) {
             push();
-            translate(this.x, this.y + 36)
+            translate(this.x << 0, (this.y << 0) + 36)
             rotate(-this.flamethrowerOffset);
             image(Player.flame0, 0, 54);
             pop();
@@ -155,5 +173,9 @@ class Player extends GameObject {
     collideBullet(b) {
         this.dx += (bulletMass * b.dx) / squirrelMass;
         this.dy += (bulletMass * b.dy) / squirrelMass;
+    }
+
+    lose() {
+
     }
 }

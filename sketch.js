@@ -3,12 +3,16 @@ let gameObjects = [],
     rollingStart,
     camera,
     hud,
+    wcDisplay,
     frameIter = 0,
     fps = 0,
     frameTimes = [],
     globalObjects = {},
     gameStarted = false,
-    font04b03;
+    font04b03,
+    p1WinCount = 0,
+    p2WinCount = 0,
+    ignoreLosses = false;
 
 p5.disableFriendlyErrors = true;
 
@@ -27,10 +31,12 @@ function setup() {
     rectMode(CENTER);
     noSmooth();
     // gameObjects = [new HowToPlay()];
-    startGame();
     lastFrame = Date.now();
     rollingStart = lastFrame;
+    wcDisplay = new WCDisplay();
+    wcDisplay.timer = -1;
     frameRate(120);
+    startGame();
 }
 
 function startGame() {
@@ -43,6 +49,7 @@ function startGame() {
     p1.spawn();
     p2.spawn();
     camera = new Camera();
+    ignoreLosses = false;
     gameStarted = true;
 }
 
@@ -65,6 +72,13 @@ function draw() {
 
     if (gameStarted) {
         hud.draw();
+        if (wcDisplay.timer < 2 && wcDisplay.timer >= 0) {
+            wcDisplay.tick(dt);
+            wcDisplay.draw();
+        } else if (wcDisplay.timer >= 2) {
+            startGame();
+            wcDisplay.timer = -1;
+        }
     }
 
     if (showFps) {
@@ -120,4 +134,16 @@ function removeObject(o) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+}
+
+function playerLost(p) {
+    if (ignoreLosses) return;
+    ignoreLosses = true;
+    if (p.which == 1) {
+        p2WinCount++;
+    } else if (p.which == 2) {
+        p1WinCount++;
+    }
+
+    wcDisplay.reset(3 - p.which);
 }

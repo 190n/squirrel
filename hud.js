@@ -27,5 +27,33 @@ class HUD extends GameObject {
         rect(42 + globalObjects.p1.fuel * 32, 12, globalObjects.p1.fuel * 64, 8);
         fill(p2Color);
         rect(42 + globalObjects.p2.fuel * 32, 48, globalObjects.p2.fuel * 64, 8);
+
+        textSize(16);
+        textFont(font04b03);
+        textAlign(LEFT, TOP);
+
+        fill(p1BulletColor);
+        rect(42, 30, 8, 8);
+        text('x' + globalObjects.p1.ammo, 48, 22);
+        fill(p2BulletColor);
+        rect(42, 66, 8, 8);
+        text('x' + globalObjects.p2.ammo, 48, 58);
+
+
+
+        // calculate players' screen positions
+        let cw = windowWidth / camera.factor,
+            ch = windowHeight / camera.factor;
+
+        let sx1 = camera.factor * (globalObjects.p1.x - camera.x + cw / 2),
+            sy1 = camera.factor * (globalObjects.p1.y - camera.y + ch / 2),
+            sx2 = camera.factor * (globalObjects.p2.x - camera.x + cw / 2),
+            sy2 = camera.factor * (globalObjects.p2.y - camera.y + ch / 2);
+
+        if (sx1 < 0 || sx1 > windowWidth || sy1 < 0 || sy1 > windowHeight) {
+            // player 1 outside screen
+            // let [indX, indY] = closestWithinScreen(sx1, sy1, playerIndicatorPadding);
+            // ellipse(indX, indY, 10, 10);
+        }
     }
 }
