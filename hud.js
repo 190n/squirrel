@@ -1,6 +1,6 @@
 class HUD extends GameObject {
     static preload() {
-        HUD.iconsSprite = loadImage('data:image/gif;base64,R0lGODlhEAAIAPIBAAAAAGYAAAAAZv+ZmZnM/wAAAAAAAAAAACH5BAEAAAAALAAAAAAQAAgAAAMjSLBMw2wQIqqYY4QdMrWVw3EDCI6jaaGcWrEboC4sA0LjkgAAOw==');
+        HUD.iconsSprite = loadImage('data:image/gif;base64,R0lGODlhKAAQAPIEAAAAZmYAAP+ZmZnM/8wzAMwzAMwzAMwzACH5BAEKAAQALAAAAAAoABAAAANvOLQ8wuxBAKAlIdgxKOWCkGWhRV1QtnmeM47SwqLYOLHe+94nujO4nE4F9NB+siBgSCQEL0OesYZ04qA603RRtc4sUZq4+GQwNWOxsmJmptXKlPt9WffOTXpyzcXrpWV4aH9fe0s2bXlvPXWHRwEJADs=');
     }
 
     constructor() {
@@ -52,8 +52,24 @@ class HUD extends GameObject {
 
         if (sx1 < 0 || sx1 > windowWidth || sy1 < 0 || sy1 > windowHeight) {
             // player 1 outside screen
-            // let [indX, indY] = closestWithinScreen(sx1, sy1, playerIndicatorPadding);
-            // ellipse(indX, indY, 10, 10);
+            let [indX, indY] = closestWithinScreen(sx1, sy1, playerIndicatorPadding);
+            let rot = angleBetweenPoints(windowWidth / 2, windowHeight / 2, indX, indY) + Math.PI / 2;
+            push();
+            translate(indX, indY);
+            rotate(rot);
+            image(HUD.iconsSprite, 0, 24, 48, 64, 16, 0, 12, 16);
+            pop();
+        }
+
+        if (sx2 < 0 || sx2 > windowWidth || sy2 < 0 || sy2 > windowHeight) {
+            // player 2 outside screen
+            let [indX, indY] = closestWithinScreen(sx2, sy2, playerIndicatorPadding);
+            let rot = angleBetweenPoints(windowWidth / 2, windowHeight / 2, indX, indY) + Math.PI / 2;
+            push();
+            translate(indX, indY);
+            rotate(rot);
+            image(HUD.iconsSprite, 0, 24, 48, 64, 28, 0, 12, 16);
+            pop();
         }
     }
 }
