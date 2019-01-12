@@ -1,5 +1,6 @@
 class KBDInput extends Input {
     constructor() {
+        super();
         this.p1RocketAngle = 0;
         this.p2RocketAngle = 0;
 
@@ -9,11 +10,12 @@ class KBDInput extends Input {
             shootDown: [undefined, p1ShootDown, p2ShootDown]
         };
 
-        this.facing = [
-            undefined,
-            globalObjects.level.data.spawns['1'].facing,
-            globalObjects.level.data.spawns['2'].facing
-        ];
+        this.facing = [undefined, 'left', 'left'];
+    }
+
+    readFacingFromLevel() {
+        this.facing[1] = globalObjects.level.data.spawns['1'].facing;
+        this.facing[2] = globalObjects.level.data.spawns['2'].facing;
     }
 
     tick(dt) {

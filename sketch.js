@@ -48,6 +48,7 @@ function startGame() {
     gameObjects = [level, p1, p2];
     hud = new HUD();
     globalObjects = {level, p1, p2};
+    input.readFacingFromLevel();
     p1.spawn();
     p2.spawn();
     camera = new Camera();
@@ -59,6 +60,8 @@ function draw() {
     background('#6699ff');
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
+
+    input.tick(dt);
 
     if (gameStarted) {
         camera.move();

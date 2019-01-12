@@ -5,14 +5,12 @@ class Player extends GameObject {
     }
 
     constructor(which) {
-        super(which == 2 ? Player.sp2r : Player.sp1r);
-        this.facing = 'right';
+        super();
         this.which = which;
         this.w = 24;
         this.h = 72;
         this.dx = 0;
         this.dy = 0;
-        this.rocketOffset = 0;
         this.onGround = false;
         this.sideEnteredFrom = null;
         this.shootTimer = -1; // negative = can shoot. if it isn't negative, it will count up in real time and be reset after configurable delay
@@ -20,11 +18,11 @@ class Player extends GameObject {
         this.ammo = playerMaxAmmo;
         this.reloadTimer = -1;
 
-        if (this.which == 1) {
+        /*if (this.which == 1) {
             [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p1Rocket, p1RocketLeft, p1RocketRight, p1Shoot, p1ShootDown];
         } else if (this.which == 2) {
             [this.rocket, this.rocketLeft, this.rocketRight, this.shoot, this.shootDown] = [p2Rocket, p2RocketLeft, p2RocketRight, p2Shoot, p2ShootDown];
-        }
+        }*/
     }
 
     spawn() {
@@ -45,45 +43,14 @@ class Player extends GameObject {
             this.doAirResistance(dt);
         }
 
-        if (keyIsDown(this.rocketLeft)) {
-            this.rocketOffset += rocketTurnRate * dt;
-            this.facing = 'left';
-            this.sprite = (this.which == 2 ? Player.sp2l : Player.sp1l);
-        }
-
-        if (keyIsDown(this.rocketRight)) {
-            this.rocketOffset -= rocketTurnRate * dt;
-            this.facing = 'right';
-            this.sprite = (this.which == 2 ? Player.sp2r : Player.sp1r);
-        }
-
-        if (this.rocketOffset !== 0 && !keyIsDown(this.rocketLeft) && !keyIsDown(this.rocketRight)) {
-            if (this.rocketOffset > 0) {
-                this.rocketOffset -= rocketTurnRate * dt;
-                if (this.rocketOffset < 0) this.rocketOffset = 0;
-            } else if (this.rocketOffset < 0) {
-                this.rocketOffset += rocketTurnRate * dt;
-                if (this.rocketOffset > 0) this.rocketOffset = 0;
-            }
-        }
-
-        this.rocketOffset = max(min(this.rocketOffset, rocketMaxOffsetAngle), -rocketMaxOffsetAngle);
-
-        if (keyIsDown(this.rocket) && this.fuel > 0) {
-            this.dy -= rocketAccel * dt * cos(this.rocketOffset);
-            this.dx -= rocketAccel * dt * sin(this.rocketOffset);
+        if (input.isFiringRocket(this.which) && this.fuel > 0) {
+            this.dy -= rocketAccel * dt * cos(input.rocketAngle(this.which));
+            this.dx -= rocketAccel * dt * sin(input.rocketAngle(this.which));
             this.fuel -= playerFuelDrain * dt;
         }
 
-        if (keyIsDown(this.shoot) && this.shootTimer < 0 && this.ammo > 0) {
-            let launchAngle = bulletDefaultLaunchAngle;
-            if (keyIsDown(this.rocket)) {
-                launchAngle = bulletMaxLaunchAngle;
-            }
-            if (keyIsDown(this.shootDown)) {
-                launchAngle = -bulletMaxLaunchAngle;
-            }
-            if (this.facing == 'left') launchAngle = Math.PI - launchAngle;
+        if (input.isShooting(this.which) && this.shootTimer < 0 && this.ammo > 0) {
+            let launchAngle = input.shootAngle(this.which);
             let dx = bulletLaunchVelocity * cos(launchAngle),
                 dy = bulletLaunchVelocity * sin(launchAngle);
             gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
@@ -115,7 +82,7 @@ class Player extends GameObject {
     }
 
     draw() {
-        let row = (this.facing == 'left' ? 0 : 1),
+        let row = (input.directionFacing(this.which) == 'left' ? 0 : 1),
             col = (this.which == 1 ? 0 : 3);
 
         if (Math.abs(this.dy) < playerDySpriteThreshold) {
@@ -124,12 +91,12 @@ class Player extends GameObject {
             col += 2;
         }
 
-        image(Player.sprite, (this.x << 0) + (this.facing == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
+        image(Player.sprite, (this.x << 0) + (input.directionFacing(this.which) == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
 
-        if (keyIsDown(this.rocket) && this.fuel > 0) {
+        if (input.isFiringRocket(this.which) && this.fuel > 0) {
             push();
             translate(this.x << 0, (this.y << 0) + 36)
-            rotate(-this.rocketOffset);
+            rotate(-input.rocketAngle(this.which));
             image(Player.flame0, 0, 54);
             pop();
         }
@@ -148,7 +115,7 @@ class Player extends GameObject {
 
                 if (this.sideEnteredFrom == 'up' && 'up' in plat.blocks) {
                     this.dy *= -plat.blocks.up;
-                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && keyIsDown(this.rocket))) {
+                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && input.isFiringRocket(this.which))) {
                     if (this.dy > 0) {
                         this.y = plat.y - plat.h / 2 - this.h / 2;
                         this.onGround = true;
