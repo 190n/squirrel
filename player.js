@@ -12,7 +12,7 @@ class Player extends GameObject {
         this.h = 72;
         this.dx = 0;
         this.dy = 0;
-        this.flamethrowerOffset = 0;
+        this.rocketOffset = 0;
         this.onGround = false;
         this.sideEnteredFrom = null;
         this.shootTimer = -1; // negative = can shoot. if it isn't negative, it will count up in real time and be reset after configurable delay
@@ -46,32 +46,32 @@ class Player extends GameObject {
         }
 
         if (keyIsDown(this.rocketLeft)) {
-            this.flamethrowerOffset += flamethrowerTurnRate * dt;
+            this.rocketOffset += rocketTurnRate * dt;
             this.facing = 'left';
             this.sprite = (this.which == 2 ? Player.sp2l : Player.sp1l);
         }
 
         if (keyIsDown(this.rocketRight)) {
-            this.flamethrowerOffset -= flamethrowerTurnRate * dt;
+            this.rocketOffset -= rocketTurnRate * dt;
             this.facing = 'right';
             this.sprite = (this.which == 2 ? Player.sp2r : Player.sp1r);
         }
 
-        if (!keyIsDown(this.rocketLeft) && !keyIsDown(this.rocketRight) && this.flamethrowerOffset !== 0) {
-            if (this.flamethrowerOffset > 0) {
-                this.flamethrowerOffset -= flamethrowerTurnRate * dt;
-                if (this.flamethrowerOffset < 0) this.flamethrowerOffset = 0;
-            } else if (this.flamethrowerOffset < 0) {
-                this.flamethrowerOffset += flamethrowerTurnRate * dt;
-                if (this.flamethrowerOffset > 0) this.flamethrowerOffset = 0;
+        if (this.rocketOffset !== 0 && !keyIsDown(this.rocketLeft) && !keyIsDown(this.rocketRight)) {
+            if (this.rocketOffset > 0) {
+                this.rocketOffset -= rocketTurnRate * dt;
+                if (this.rocketOffset < 0) this.rocketOffset = 0;
+            } else if (this.rocketOffset < 0) {
+                this.rocketOffset += rocketTurnRate * dt;
+                if (this.rocketOffset > 0) this.rocketOffset = 0;
             }
         }
 
-        this.flamethrowerOffset = max(min(this.flamethrowerOffset, flamethrowerMaxOffsetAngle), -flamethrowerMaxOffsetAngle);
+        this.rocketOffset = max(min(this.rocketOffset, rocketMaxOffsetAngle), -rocketMaxOffsetAngle);
 
         if (keyIsDown(this.rocket) && this.fuel > 0) {
-            this.dy -= flamethrowerAccel * dt * cos(this.flamethrowerOffset);
-            this.dx -= flamethrowerAccel * dt * sin(this.flamethrowerOffset);
+            this.dy -= rocketAccel * dt * cos(this.rocketOffset);
+            this.dx -= rocketAccel * dt * sin(this.rocketOffset);
             this.fuel -= playerFuelDrain * dt;
         }
 
@@ -129,7 +129,7 @@ class Player extends GameObject {
         if (keyIsDown(this.rocket) && this.fuel > 0) {
             push();
             translate(this.x << 0, (this.y << 0) + 36)
-            rotate(-this.flamethrowerOffset);
+            rotate(-this.rocketOffset);
             image(Player.flame0, 0, 54);
             pop();
         }

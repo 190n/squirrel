@@ -4,6 +4,7 @@ let gameObjects = [],
     camera,
     hud,
     wcDisplay,
+    input,
     frameIter = 0,
     fps = 0,
     frameTimes = [],
@@ -35,6 +36,7 @@ function setup() {
     rollingStart = lastFrame;
     wcDisplay = new WCDisplay();
     wcDisplay.timer = -1;
+    input = new KBDInput();
     frameRate(120);
     startGame();
 }
