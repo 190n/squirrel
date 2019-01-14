@@ -32,4 +32,5 @@ const squirrelMass = 0.3,
     playerFuelRefillRate = 2, // units/sec
     playerMaxAmmo = 8,
     playerAmmoRefillTime = 3,
-    playerIndicatorPadding = 32;
+    playerIndicatorPadding = 32,
+    radarMaxSize = 128;

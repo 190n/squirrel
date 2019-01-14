@@ -71,5 +71,24 @@ class HUD extends GameObject {
             image(HUD.iconsSprite, 0, 24, 48, 64, 28, 0, 12, 16);
             pop();
         }
+
+        let sz = globalObjects.level.data.safeZone;
+
+        let radarScale = radarMaxSize / Math.max(sz.w, sz.h),
+            radarW = sz.w * radarScale,
+            radarH = sz.h * radarScale;
+
+        fill('rgba(0, 0, 0, 0.1)');
+        rect(4 + radarW / 2, 76 + radarH / 2, radarW, radarH);
+
+        let p1szx = globalObjects.p1.x - sz.x + (sz.w / 2),
+            p1szy = globalObjects.p1.y - sz.y + (sz.h / 2),
+            p2szx = globalObjects.p2.x - sz.x + (sz.w / 2),
+            p2szy = globalObjects.p2.y - sz.y + (sz.h / 2);
+
+        fill(p1BulletColor);
+        rect(p1szx * radarScale + 4, p1szy * radarScale + 76, 4, 4);
+        fill(p2BulletColor);
+        rect(p2szx * radarScale + 4, p2szy * radarScale + 76, 4, 4);
     }
 }
