@@ -124,6 +124,14 @@ class GPInput extends Input {
         return this.shootAngles[which];
     }
 
+    isReloading(which) {
+        if (which == 1) {
+            return this.gp1.buttons[2].pressed;
+        } else if (which == 2) {
+            return this.gp2.buttons[2].pressed;
+        }
+    }
+
     getRightStickXY(gp) {
         if (gp.mapping == 'standard') {
             return [gp.axes[2], gp.axes[3]];

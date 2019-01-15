@@ -33,6 +33,10 @@ class Input {
         return 0;
     }
 
+    isReloading(which) {
+        return false;
+    }
+
     directionFacing(which) {
         return 'right';
     }
