@@ -1,5 +1,19 @@
 class Input {
+    constructor() {
+        this.ready = true;
+        this.facing = [undefined, 'left', 'left'];
+    }
+
+    readFacingFromLevel() {
+        this.facing[1] = globalObjects.level.data.spawns['1'].facing;
+        this.facing[2] = globalObjects.level.data.spawns['2'].facing;
+    }
+
     tick(dt) {
+
+    }
+
+    displayPrompt() {
 
     }
 
@@ -7,8 +21,8 @@ class Input {
         return 0;
     }
 
-    isFiringRocket(which) {
-        return false;
+    rocketStrength(which) {
+        return 0;
     }
 
     isShooting(which) {

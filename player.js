@@ -43,10 +43,17 @@ class Player extends GameObject {
             this.doAirResistance(dt);
         }
 
-        if (input.isFiringRocket(this.which) && this.fuel > 0) {
-            this.dy -= rocketAccel * dt * cos(input.rocketAngle(this.which));
-            this.dx -= rocketAccel * dt * sin(input.rocketAngle(this.which));
-            this.fuel -= playerFuelDrain * dt;
+        // if (input.rocketStrength(this.which) > 0 && this.fuel > 0) {
+        //     this.dy -= rocketAccel * dt * cos(input.rocketAngle(this.which));
+        //     this.dx -= rocketAccel * dt * sin(input.rocketAngle(this.which));
+        //     this.fuel -= playerFuelDrain * dt;
+        // }
+
+        let rs = Math.max(0, Math.min(1, input.rocketStrength(this.which)));
+        if (this.fuel > 0) {
+            this.dy -= rs * rocketAccel * dt * Math.cos(input.rocketAngle(this.which));
+            this.dx -= rs * rocketAccel * dt * Math.sin(input.rocketAngle(this.which));
+            this.fuel -= rs * playerFuelDrain * dt;
         }
 
         if (input.isShooting(this.which) && this.shootTimer < 0 && this.ammo > 0) {
@@ -93,7 +100,7 @@ class Player extends GameObject {
 
         image(Player.sprite, (this.x << 0) + (input.directionFacing(this.which) == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
 
-        if (input.isFiringRocket(this.which) && this.fuel > 0) {
+        if (input.rocketStrength(this.which) > 0 && this.fuel > 0) {
             push();
             translate(this.x << 0, (this.y << 0) + 36)
             rotate(-input.rocketAngle(this.which));

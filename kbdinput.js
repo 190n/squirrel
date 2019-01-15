@@ -9,13 +9,6 @@ class KBDInput extends Input {
             isShooting: [undefined, p1Shoot, p2Shoot],
             shootDown: [undefined, p1ShootDown, p2ShootDown]
         };
-
-        this.facing = [undefined, 'left', 'left'];
-    }
-
-    readFacingFromLevel() {
-        this.facing[1] = globalObjects.level.data.spawns['1'].facing;
-        this.facing[2] = globalObjects.level.data.spawns['2'].facing;
     }
 
     tick(dt) {
@@ -72,8 +65,8 @@ class KBDInput extends Input {
         }
     }
 
-    isFiringRocket(which) {
-        return keyIsDown(this.binds.isFiringRocket[which]);
+    rocketStrength(which) {
+        return keyIsDown(this.binds.isFiringRocket[which]) ? 1 : 0;
     }
 
     isShooting(which) {

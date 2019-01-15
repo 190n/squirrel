@@ -13,7 +13,8 @@ let gameObjects = [],
     font04b03,
     p1WinCount = 0,
     p2WinCount = 0,
-    ignoreLosses = false;
+    ignoreLosses = false,
+    paused = false;
 
 p5.disableFriendlyErrors = true;
 
@@ -36,7 +37,7 @@ function setup() {
     rollingStart = lastFrame;
     wcDisplay = new WCDisplay();
     wcDisplay.timer = -1;
-    input = new KBDInput();
+    input = new GPInput();
     frameRate(120);
     startGame();
 }
@@ -63,6 +64,12 @@ function draw() {
 
     input.tick(dt);
 
+    if (!input.ready) {
+        paused = true;
+    } else {
+        paused = false;
+    }
+
     if (gameStarted) {
         camera.move();
         camera.transformCanvas();
@@ -70,7 +77,9 @@ function draw() {
 
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
-        gameObjects[i].tick(dt);
+        if (!paused) {
+            gameObjects[i].tick(dt);
+        }
     }
 
     resetMatrix();
@@ -84,6 +93,15 @@ function draw() {
             startGame();
             wcDisplay.timer = -1;
         }
+    }
+
+    if (paused) {
+        fill('rgba(102, 153, 255, 0.7)');
+        rect(width / 2, height / 2, width, height);
+    }
+
+    if (!input.ready) {
+        input.displayPrompt();
     }
 
     if (showFps) {
