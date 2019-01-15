@@ -24,9 +24,9 @@ class HUD extends GameObject {
         rect(74, 48, 68, 12);
         noStroke();
         fill(p1Color);
-        rect(42 + globalObjects.p1.fuel * 32, 12, globalObjects.p1.fuel * 64, 8);
+        rect(42 + this.p1.fuel * 32, 12, this.p1.fuel * 64, 8);
         fill(p2Color);
-        rect(42 + globalObjects.p2.fuel * 32, 48, globalObjects.p2.fuel * 64, 8);
+        rect(42 + this.p2.fuel * 32, 48, this.p2.fuel * 64, 8);
 
         textSize(16);
         textFont(font04b03);
@@ -34,10 +34,10 @@ class HUD extends GameObject {
 
         fill(p1BulletColor);
         rect(42, 30, 8, 8);
-        text('x' + globalObjects.p1.ammo, 48, 22);
+        text('x' + this.p1.ammo, 48, 22);
         fill(p2BulletColor);
         rect(42, 66, 8, 8);
-        text('x' + globalObjects.p2.ammo, 48, 58);
+        text('x' + this.p2.ammo, 48, 58);
 
 
 
@@ -45,10 +45,10 @@ class HUD extends GameObject {
         let cw = windowWidth / camera.factor,
             ch = windowHeight / camera.factor;
 
-        let sx1 = camera.factor * (globalObjects.p1.x - camera.x + cw / 2),
-            sy1 = camera.factor * (globalObjects.p1.y - camera.y + ch / 2),
-            sx2 = camera.factor * (globalObjects.p2.x - camera.x + cw / 2),
-            sy2 = camera.factor * (globalObjects.p2.y - camera.y + ch / 2);
+        let sx1 = camera.factor * (this.p1.x - camera.x + cw / 2),
+            sy1 = camera.factor * (this.p1.y - camera.y + ch / 2),
+            sx2 = camera.factor * (this.p2.x - camera.x + cw / 2),
+            sy2 = camera.factor * (this.p2.y - camera.y + ch / 2);
 
         if (sx1 < 0 || sx1 > windowWidth || sy1 < 0 || sy1 > windowHeight) {
             // player 1 outside screen
@@ -81,14 +81,30 @@ class HUD extends GameObject {
         fill('rgba(0, 0, 0, 0.2)');
         rect(4 + radarW / 2, 76 + radarH / 2, radarW, radarH);
 
-        let p1szx = globalObjects.p1.x - sz.x + (sz.w / 2),
-            p1szy = globalObjects.p1.y - sz.y + (sz.h / 2),
-            p2szx = globalObjects.p2.x - sz.x + (sz.w / 2),
-            p2szy = globalObjects.p2.y - sz.y + (sz.h / 2);
+        let p1szx = this.p1.x - sz.x + (sz.w / 2),
+            p1szy = this.p1.y - sz.y + (sz.h / 2),
+            p2szx = this.p2.x - sz.x + (sz.w / 2),
+            p2szy = this.p2.y - sz.y + (sz.h / 2);
 
         fill(p1BulletColor);
         rect(p1szx * radarScale + 4, p1szy * radarScale + 76, 4, 4);
         fill(p2BulletColor);
         rect(p2szx * radarScale + 4, p2szy * radarScale + 76, 4, 4);
+
+        if (this.p1.reloadTimer > 0) {
+            fill(p1BulletColor);
+            textSize(32);
+            textAlign(CENTER, BOTTOM);
+            text('RELOADING', sx1, sy1 - 48 * camera.factor);
+            rect(sx1, sy1 - 48 * camera.factor, 168 * this.p1.reloadTimer / playerAmmoRefillTime, 8);
+        }
+
+        if (this.p2.reloadTimer > 0) {
+            fill(p2BulletColor);
+            textSize(32);
+            textAlign(CENTER, BOTTOM);
+            text('RELOADING', sx2, sy2 - 48 * camera.factor);
+            rect(sx2, sy2 - 48 * camera.factor, 168 * this.p2.reloadTimer / playerAmmoRefillTime, 8);
+        }
     }
 }

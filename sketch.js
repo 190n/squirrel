@@ -75,6 +75,21 @@ function draw() {
         camera.transformCanvas();
     }
 
+    hud.p1 = {
+        x: globalObjects.p1.x,
+        y: globalObjects.p1.y,
+        fuel: globalObjects.p1.fuel,
+        ammo: globalObjects.p1.ammo,
+        reloadTimer: globalObjects.p1.reloadTimer
+    };
+    hud.p2 = {
+        x: globalObjects.p2.x,
+        y: globalObjects.p2.y,
+        fuel: globalObjects.p2.fuel,
+        ammo: globalObjects.p2.ammo,
+        reloadTimer: globalObjects.p2.reloadTimer
+    };
+
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
         if (!paused) {

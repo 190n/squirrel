@@ -14,8 +14,8 @@ class GPInput extends Input {
 
     readFacingFromLevel() {
         Input.prototype.readFacingFromLevel.call(this);
-        this.shootAngles[1] = this.facing[1] == 'left' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
-        this.shootAngles[2] = this.facing[2] == 'left' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
+        this.shootAngles[1] = this.facing[1] == 'right' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
+        this.shootAngles[2] = this.facing[2] == 'right' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
     }
 
     getConnectedGamepads() {
