@@ -9,6 +9,13 @@ class GPInput extends Input {
         this.p2Index = -1;
         this.gp1 = null;
         this.gp2 = null;
+        this.shootAngles = [undefined, 0, 0];
+    }
+
+    readFacingFromLevel() {
+        Input.prototype.readFacingFromLevel.call(this);
+        this.shootAngles[1] = this.facing[1] == 'left' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
+        this.shootAngles[2] = this.facing[2] == 'left' ? bulletDefaultLaunchAngle : Math.PI - bulletDefaultLaunchAngle;
     }
 
     getConnectedGamepads() {
@@ -41,6 +48,20 @@ class GPInput extends Input {
                     this.gp2 = navigator.getGamepads()[this.p2Index];
                     this.ready = true;
                 }
+            }
+        } else {
+            let [x1, y1] = this.getRightStickXY(this.gp1);
+            let [x2, y2] = this.getRightStickXY(this.gp2);
+            if (this.calcOffsetSquared(x1, y1) > shootAngleDeadzoneSquared) {
+                let angle = this.calcAngle(x1, y1)
+                this.shootAngles[1] = angle;
+                this.facing[1] = (-Math.PI / 2 < angle && angle < Math.PI / 2) ? 'right' : 'left';
+            }
+
+            if (this.calcOffsetSquared(x2, y2) > shootAngleDeadzoneSquared) {
+                let angle = this.calcAngle(x2, y2);
+                this.shootAngles[2] = angle;
+                this.facing[2] = (-Math.PI / 2 < angle && angle < Math.PI / 2) ? 'right' : 'left';
             }
         }
     }
@@ -100,19 +121,14 @@ class GPInput extends Input {
     }
 
     shootAngle(which) {
-        if (!this.ready) return false;
-        if (which == 1) {
-            if (this.gp1.mapping == 'standard') {
-                return this.calcAngle(this.gp1.axes[2], this.gp1.axes[3]);
-            } else {
-                return this.calcAngle(this.gp1.axes[3], this.gp1.axes[4]);
-            }
-        } else if (which == 2) {
-            if (this.gp1.mapping == 'standard') {
-                return this.calcAngle(this.gp2.axes[2], this.gp2.axes[3]);
-            } else {
-                return this.calcAngle(this.gp2.axes[3], this.gp2.axes[4]);
-            }
+        return this.shootAngles[which];
+    }
+
+    getRightStickXY(gp) {
+        if (gp.mapping == 'standard') {
+            return [gp.axes[2], gp.axes[3]];
+        } else {
+            return [gp.axes[3], gp.axes[4]];
         }
     }
 
@@ -125,6 +141,6 @@ class GPInput extends Input {
     }
 
     directionFacing(which) {
-
+        return this.facing[which];
     }
 }
