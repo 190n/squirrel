@@ -65,7 +65,12 @@ class GPInput extends Input {
     }
 
     rocketAngle(which) {
-        return 0;
+        if (!this.ready) return 0;
+        if (which == 1) {
+            return -this.gp1.axes[0] * rocketMaxOffsetAngle;
+        } else if (which == 2) {
+            return -this.gp2.axes[0] * rocketMaxOffsetAngle;
+        }
     }
 
     rocketStrength(which) {
@@ -92,5 +97,34 @@ class GPInput extends Input {
         } else if (which == 2) {
             return this.gp2.buttons[5].pressed;
         }
+    }
+
+    shootAngle(which) {
+        if (!this.ready) return false;
+        if (which == 1) {
+            if (this.gp1.mapping == 'standard') {
+                return this.calcAngle(this.gp1.axes[2], this.gp1.axes[3]);
+            } else {
+                return this.calcAngle(this.gp1.axes[3], this.gp1.axes[4]);
+            }
+        } else if (which == 2) {
+            if (this.gp1.mapping == 'standard') {
+                return this.calcAngle(this.gp2.axes[2], this.gp2.axes[3]);
+            } else {
+                return this.calcAngle(this.gp2.axes[3], this.gp2.axes[4]);
+            }
+        }
+    }
+
+    calcAngle(x, y) {
+        return Math.atan2(y, x);
+    }
+
+    calcOffsetSquared(x, y) {
+        return x ** 2 + y ** 2;
+    }
+
+    directionFacing(which) {
+
     }
 }

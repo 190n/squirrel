@@ -102,8 +102,9 @@ class Player extends GameObject {
 
         if (input.rocketStrength(this.which) > 0 && this.fuel > 0) {
             push();
-            translate(this.x << 0, (this.y << 0) + 36)
+            translate(this.x << 0, (this.y << 0) + 36);
             rotate(-input.rocketAngle(this.which));
+            scale(1, input.rocketStrength(this.which));
             image(Player.flame0, 0, 54);
             pop();
         }
@@ -122,7 +123,7 @@ class Player extends GameObject {
 
                 if (this.sideEnteredFrom == 'up' && 'up' in plat.blocks) {
                     this.dy *= -plat.blocks.up;
-                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && input.isFiringRocket(this.which))) {
+                } else if (this.sideEnteredFrom == 'down' && 'down' in plat.blocks && !(this.onGround && input.rocketStrength(this.which > 0))) {
                     if (this.dy > 0) {
                         this.y = plat.y - plat.h / 2 - this.h / 2;
                         this.onGround = true;

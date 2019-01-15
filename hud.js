@@ -78,7 +78,7 @@ class HUD extends GameObject {
             radarW = sz.w * radarScale,
             radarH = sz.h * radarScale;
 
-        fill('rgba(0, 0, 0, 0.1)');
+        fill('rgba(0, 0, 0, 0.2)');
         rect(4 + radarW / 2, 76 + radarH / 2, radarW, radarH);
 
         let p1szx = globalObjects.p1.x - sz.x + (sz.w / 2),
