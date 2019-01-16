@@ -56,17 +56,18 @@ class Player extends GameObject {
             this.fuel -= rs * playerFuelDrain * dt;
         }
 
-        if (input.isReloading(this.which) && this.ammo < playerMaxAmmo) {
+        if (input.isReloading(this.which) && this.ammo < playerMaxAmmo && this.reloadTimer < 0) {
             this.reloadTimer = 0;
         }
 
-        if (input.isShooting(this.which) && this.shootTimer < 0 && this.ammo > 0 && this.reloadTimer < 0) {
+        if (input.isShooting(this.which) && this.shootTimer < 0 && this.ammo > 0) {
             let launchAngle = input.shootAngle(this.which);
             let dx = bulletLaunchVelocity * cos(launchAngle),
                 dy = bulletLaunchVelocity * sin(launchAngle);
             gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
             this.shootTimer = 0;
             this.ammo--;
+            this.reloadTimer = -1;
             if (this.ammo == 0) {
                 this.reloadTimer = 0;
             }

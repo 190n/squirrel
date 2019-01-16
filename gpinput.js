@@ -10,6 +10,7 @@ class GPInput extends Input {
         this.gp1 = null;
         this.gp2 = null;
         this.shootAngles = [undefined, 0, 0];
+        this.lastStartButtonState = [undefined, false, false];
     }
 
     readFacingFromLevel() {
@@ -47,6 +48,7 @@ class GPInput extends Input {
                     this.gp1 = navigator.getGamepads()[this.p1Index];
                     this.gp2 = navigator.getGamepads()[this.p2Index];
                     this.ready = true;
+                    countdown.start();
                 }
             }
         } else {
@@ -63,6 +65,15 @@ class GPInput extends Input {
                 this.shootAngles[2] = angle;
                 this.facing[2] = (-Math.PI / 2 < angle && angle < Math.PI / 2) ? 'right' : 'left';
             }
+
+            if (!this.lastStartButtonState[1] && this.isStartButtonPressed(this.gp1)) {
+                togglePaused();
+            } else if (!this.lastStartButtonState[2] && this.isStartButtonPressed(this.gp2)) {
+                togglePaused();
+            }
+
+            this.lastStartButtonState[1] = this.isStartButtonPressed(this.gp1);
+            this.lastStartButtonState[2] = this.isStartButtonPressed(this.gp2);
         }
     }
 
@@ -137,6 +148,14 @@ class GPInput extends Input {
             return [gp.axes[2], gp.axes[3]];
         } else {
             return [gp.axes[3], gp.axes[4]];
+        }
+    }
+
+    isStartButtonPressed(gp) {
+        if (gp.mapping == 'standard') {
+            return gp.buttons[9].pressed;
+        } else {
+            return gp.buttons[7].pressed;
         }
     }
 

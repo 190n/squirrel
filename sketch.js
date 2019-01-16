@@ -4,6 +4,7 @@ let gameObjects = [],
     camera,
     hud,
     wcDisplay,
+    countdown,
     input,
     frameIter = 0,
     fps = 0,
@@ -36,6 +37,7 @@ function setup() {
     lastFrame = Date.now();
     rollingStart = lastFrame;
     wcDisplay = new WCDisplay();
+    countdown = new Countdown();
     wcDisplay.timer = -1;
     input = new GPInput();
     frameRate(120);
@@ -63,12 +65,7 @@ function draw() {
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
     input.tick(dt);
-
-    if (!input.ready) {
-        paused = true;
-    } else {
-        paused = false;
-    }
+    countdown.tick(dt);
 
     if (gameStarted) {
         camera.move();
@@ -92,7 +89,7 @@ function draw() {
 
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].draw();
-        if (!paused) {
+        if (!paused && input.ready && !countdown.active) {
             gameObjects[i].tick(dt);
         }
     }
@@ -110,7 +107,7 @@ function draw() {
         }
     }
 
-    if (paused) {
+    if (paused || !input.ready || countdown.active) {
         fill('rgba(102, 153, 255, 0.7)');
         rect(width / 2, height / 2, width, height);
     }
@@ -118,6 +115,8 @@ function draw() {
     if (!input.ready) {
         input.displayPrompt();
     }
+
+    countdown.draw();
 
     if (showFps) {
         frameIter++;
@@ -184,4 +183,12 @@ function playerLost(p) {
     }
 
     wcDisplay.reset(3 - p.which);
+}
+
+function togglePaused() {
+    console.log('togglePaused');
+    paused = !paused;
+    if (!paused) {
+        countdown.start();
+    }
 }
