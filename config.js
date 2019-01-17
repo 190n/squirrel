@@ -15,7 +15,7 @@ const squirrelMass = 0.3,
     bulletDefaultLaunchAngle = Math.PI / -12, // 15° up
     bulletMaxLaunchAngle = Math.PI / -3, // 60° up or down (only when player launches bullet up or down)
     maxDeltaTime = 0.05, // seconds
-    bulletMass = 0.05,
+    bulletMass = 0.1,
     bulletIterations = 16,
     p1BulletTrailColor = 'rgba(153, 204, 255, ',
     p2BulletTrailColor = 'rgba(255, 153, 153, ',
@@ -33,5 +33,5 @@ const squirrelMass = 0.3,
     playerMaxAmmo = 12,
     playerAmmoRefillTime = 3,
     playerIndicatorPadding = 32,
-    radarMaxSize = 128,
+    radarMaxSize = 256,
     shootAngleDeadzoneSquared = 0.09; // actual deadzone = 0.3

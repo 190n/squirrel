@@ -60,7 +60,7 @@ function startGame() {
 }
 
 function draw() {
-    background('#6699ff');
+    background('#6699cc');
     let now = Date.now(),
         dt = Math.min(maxDeltaTime, (now - lastFrame) / 1000);
 
@@ -71,6 +71,10 @@ function draw() {
         camera.move();
         camera.transformCanvas();
     }
+
+    fill('#6699ff');
+    noStroke();
+    rect(globalObjects.level.data.safeZone.x, globalObjects.level.data.safeZone.y, globalObjects.level.data.safeZone.w / 2, globalObjects.level.data.safeZone.h / 2);
 
     hud.p1 = {
         x: globalObjects.p1.x,
@@ -110,6 +114,14 @@ function draw() {
     if (paused || !input.ready || countdown.active) {
         fill('rgba(102, 153, 255, 0.7)');
         rect(width / 2, height / 2, width, height);
+    }
+
+    if (paused) {
+        fill(0);
+        textFont(font04b03);
+        textSize(256);
+        textAlign(CENTER, CENTER);
+        text('PAUSED', windowWidth / 2, windowHeight * 0.3);
     }
 
     if (!input.ready) {
