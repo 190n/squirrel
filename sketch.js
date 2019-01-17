@@ -39,8 +39,8 @@ function setup() {
     wcDisplay = new WCDisplay();
     countdown = new Countdown();
     wcDisplay.timer = -1;
-    input = new GPInput();
-    frameRate(120);
+    input = new KBDInput();
+    frameRate(1200);
     startGame();
 }
 
@@ -69,12 +69,12 @@ function draw() {
 
     if (gameStarted) {
         camera.move();
-        camera.transformCanvas();
+        camera.transformCanvas(1);
     }
 
     fill('#6699ff');
     noStroke();
-    rect(globalObjects.level.data.safeZone.x, globalObjects.level.data.safeZone.y, globalObjects.level.data.safeZone.w / 2, globalObjects.level.data.safeZone.h / 2);
+    rect(globalObjects.level.data.safeZone.x, globalObjects.level.data.safeZone.y, globalObjects.level.data.safeZone.w * 0.75, globalObjects.level.data.safeZone.h * 0.75);
 
     hud.p1 = {
         x: globalObjects.p1.x,

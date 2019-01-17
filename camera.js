@@ -29,10 +29,10 @@ class Camera {
         this.factor += cameraCorrectionFactor * (this.idealFactor - this.factor);
     }
 
-    transformCanvas() {
+    transformCanvas(amount) {
         resetMatrix();
         translate(windowWidth / 2, windowHeight / 2);
-        scale(this.factor);
-        translate(-this.x, -this.y);
+        scale(this.factor * amount);
+        translate(-this.x * amount, -this.y * amount);
     }
 }
