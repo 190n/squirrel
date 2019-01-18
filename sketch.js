@@ -39,7 +39,7 @@ function setup() {
     wcDisplay = new WCDisplay();
     countdown = new Countdown();
     wcDisplay.timer = -1;
-    input = new KBDInput();
+    input = new GPInput();
     frameRate(1200);
     startGame();
 }
