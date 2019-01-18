@@ -30,6 +30,11 @@ class GPInput extends Input {
             this.ready = false;
             this.p1Index = -1;
             this.p2Index = -1;
+            if (keyIsDown(32)) {
+                // spacebar
+                input = new KBDInput();
+                input.readFacingFromLevel();
+            }
         } else if (!this.ready) {
             let idxsPressing = [];
 
@@ -82,7 +87,8 @@ class GPInput extends Input {
             gps = this.getConnectedGamepads();
         if (gps.length < 2) {
             msg = 'Connect two controllers. You may need\nto disconnect and reconnect a controller.';
-            msg += `\nCurrently connected: ${gps.length}`;
+            msg += `\nCurrently connected: ${gps.length}\n`;
+            msg += 'Press space to use keyboard controls';
         } else if (this.p1Index == -1) {
             msg = 'Press LB+RB on only player 1\'s controller';
         } else if (this.p2Index == -1) {
