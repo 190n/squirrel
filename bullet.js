@@ -28,7 +28,7 @@ class Bullet extends GameObject {
             this.doGravity(dt);
             this.doAirResistance(dt);
             this.age += dt;
-            if (this.age >= bulleLifetime) {
+            if (this.age >= bulletLifetime) {
                 return this.destroy();
             }
 
