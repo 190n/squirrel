@@ -1,4 +1,4 @@
-let squirrelMass = 0.3,
+const squirrelMass = 0.3,
     pixelsToMeter = 144,
     gravity = 9.8,
     rocketForce = 5,

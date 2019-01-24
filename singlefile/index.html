@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Untitled Squirrel Game</title>
+        <link rel="stylesheet" href="main.css">
+        <script src="min.js"></script>
+    </head>
+    <body>
+        <div id="howtoplay">
+            <div id="htp-centered">
+                <ul id="htp-nav">
+                    <li id="htp-nav-1" class="htp-nav active" onclick="switchHTPContent(1)">BASIC INFO</li>
+                    <li id="htp-nav-2" class="htp-nav" onclick="switchHTPContent(2)">KEYBOARD BINDINGS</li>
+                    <li id="htp-nav-3" class="htp-nav" onclick="switchHTPContent(3)">CONTROLLER BINDINGS</li>
+                </ul>
+                <div id="htp-content-1" class="htp-content active">
+                    Shoot your opponent to knock them out of the safe area and
+                    score a point. Fuel and ammo are limited. Fuel refills when
+                    you are on the ground. Ammo can be reloaded manually, but
+                    will reload automatically when it runs out.
+                </div>
+                <div id="htp-content-2" class="htp-content">
+                    <table>
+                        <tr>
+                            <th>Player 1</th>
+                            <th>Player 2</th>
+                        </tr>
+                        <tr>
+                            <td>W: throttle</td>
+                            <td>I: throttle</td>
+                        </tr>
+                        <tr>
+                            <td>A: fly left</td>
+                            <td>J: fly left</td>
+                        </tr>
+                        <tr>
+                            <td>S: shoot down</td>
+                            <td>K: shoot down</td>
+                        </tr>
+                        <tr>
+                            <td>D: fly right</td>
+                            <td>L: fly right</td>
+                        </tr>
+                        <tr>
+                            <td>R: reload</td>
+                            <td>U: reload</td>
+                        </tr>
+                        <tr>
+                            <td>F: shoot</td>
+                            <td>H: shoot</td>
+                        </tr>
+                    </table>
+                    <div style="text-align: center">
+                        ESC: pause/unpause
+                    </div>
+                </div>
+                <div id="htp-content-3" class="htp-content">
+                    LT: throttle<br>
+                    LS: fly (left/right)<br>
+                    RS: aim (any direction)<br>
+                    RB: shoot<br>
+                    X (on Xbox-style controller): reload<br>
+                    START: pause/unpause
+                </div>
+            </div>
+            <img src="htp-hud-arrows.png" id="htp-hud-arrows">
+        </div>
+        <div id="htp-button" onclick="toggleHTP()">
+            ?
+        </div>
+    </body>
+</html>
