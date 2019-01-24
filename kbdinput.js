@@ -7,8 +7,11 @@ class KBDInput extends Input {
         this.binds = {
             isFiringRocket: [undefined, p1Rocket, p2Rocket],
             isShooting: [undefined, p1Shoot, p2Shoot],
-            shootDown: [undefined, p1ShootDown, p2ShootDown]
+            shootDown: [undefined, p1ShootDown, p2ShootDown],
+            isReloading: [undefined, p1Reload, p2Reload]
         };
+
+        this.lastPauseButtonState = false;
     }
 
     tick(dt) {
@@ -55,6 +58,12 @@ class KBDInput extends Input {
         }
 
         this.p2RocketAngle = Math.max(Math.min(this.p2RocketAngle, rocketMaxOffsetAngle), -rocketMaxOffsetAngle);
+
+        if (!this.lastPauseButtonState && keyIsDown(pXPause)) {
+            togglePaused();
+        }
+
+        this.lastPauseButtonState = keyIsDown(pXPause);
     }
 
     rocketAngle(which) {
@@ -71,6 +80,10 @@ class KBDInput extends Input {
 
     isShooting(which) {
         return keyIsDown(this.binds.isShooting[which]);
+    }
+
+    isReloading(which) {
+        return keyIsDown(this.binds.isReloading[which]);
     }
 
     shootAngle(which) {

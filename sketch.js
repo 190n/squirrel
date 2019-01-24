@@ -11,6 +11,8 @@ let gameObjects = [],
     frameTimes = [],
     globalObjects = {},
     gameStarted = false,
+    htpVisible = false,
+    htpWhichTab = 1,
     font04b03,
     p1WinCount = 0,
     p2WinCount = 0,
@@ -33,7 +35,6 @@ function setup() {
     imageMode(CENTER);
     rectMode(CENTER);
     noSmooth();
-    // gameObjects = [new HowToPlay()];
     lastFrame = Date.now();
     rollingStart = lastFrame;
     wcDisplay = new WCDisplay();
@@ -124,8 +125,15 @@ function draw() {
         text('PAUSED', windowWidth / 2, windowHeight * 0.3);
     }
 
-    if (!input.ready) {
+    if (!input.ready && !htpVisible) {
         input.displayPrompt();
+        document.getElementById('htp-button').style.display = 'block';
+    }
+
+    else if (input.ready) {
+        htpVisible = false;
+        document.getElementById('howtoplay').style.display = 'none';
+        document.getElementById('htp-button').style.display = 'none';
     }
 
     countdown.draw();
@@ -202,5 +210,38 @@ function togglePaused() {
     paused = !paused;
     if (!paused) {
         countdown.start();
+    }
+}
+
+function toggleHTP() {
+    htpVisible = !htpVisible;
+    if (htpVisible) {
+        document.getElementById('howtoplay').style.display = 'block';
+    } else {
+        document.getElementById('howtoplay').style.display = 'none';
+    }
+}
+
+function switchHTPContent(which) {
+    if (htpWhichTab == which) {
+        return;
+    }
+
+    htpWhichTab = which;
+
+    for (let nav of document.getElementsByClassName('htp-nav')) {
+        if (nav.id == `htp-nav-${which}`) {
+            nav.classList.add('active');
+        } else {
+            nav.classList.remove('active');
+        }
+    }
+
+    for (let content of document.getElementsByClassName('htp-content')) {
+        if (content.id == `htp-content-${which}`) {
+            content.classList.add('active');
+        } else {
+            content.classList.remove('active');
+        }
     }
 }

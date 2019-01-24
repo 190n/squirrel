@@ -30,7 +30,7 @@ class GPInput extends Input {
             this.ready = false;
             this.p1Index = -1;
             this.p2Index = -1;
-            if (keyIsDown(32)) {
+            if (!htpVisible && keyIsDown(32)) {
                 // spacebar
                 input = new KBDInput();
                 input.readFacingFromLevel();
