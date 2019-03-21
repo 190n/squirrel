@@ -94,7 +94,11 @@ class Player extends GameObject {
     }
 
     draw() {
-        let row = (input.directionFacing(this.which) == 'left' ? 0 : 1),
+        this.drawWithoutInput(input.directionFacing(this.which), input.rocketStrength(this.which), input.rocketAngle(this.which));
+    }
+
+    drawWithoutInput(facing, rocketStrength, rocketAngle) {
+        let row = (facing == 'left' ? 0 : 1),
             col = (this.which == 1 ? 0 : 3);
 
         if (Math.abs(this.dy) < playerDySpriteThreshold) {
@@ -103,13 +107,13 @@ class Player extends GameObject {
             col += 2;
         }
 
-        image(Player.sprite, (this.x << 0) + (input.directionFacing(this.which) == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
+        image(Player.sprite, (this.x << 0) + (facing == 'left' ? 6 : -6), (this.y << 0) + 4, 68, 80, col * 68, row * 80, 68, 80);
 
-        if (input.rocketStrength(this.which) > 0 && this.fuel > 0) {
+        if (rocketStrength > 0 && this.fuel > 0) {
             push();
             translate(this.x << 0, (this.y << 0) + 36);
-            rotate(-input.rocketAngle(this.which));
-            scale(1, input.rocketStrength(this.which));
+            rotate(-rocketAngle);
+            scale(1, rocketStrength);
             image(Player.flame0, 0, 54);
             pop();
         }

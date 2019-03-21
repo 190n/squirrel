@@ -17,7 +17,8 @@ let gameObjects = [],
     p1WinCount = 0,
     p2WinCount = 0,
     ignoreLosses = false,
-    paused = false;
+    paused = false,
+    socket;
 
 p5.disableFriendlyErrors = true;
 
@@ -40,15 +41,25 @@ function setup() {
     wcDisplay = new WCDisplay();
     countdown = new Countdown();
     wcDisplay.timer = -1;
-    input = new GPInput();
+    input = new LocalKBDInput();
     frameRate(1200);
     startGame();
 }
 
 function startGame() {
-    let level = new Level(),
-        p1 = new Player(1),
-        p2 = new Player(2);
+    whichIsLocal = parseInt(prompt('Which player is local? (1/2)'));
+    socket = io()
+
+    let level = new Level(), p1, p2;
+
+    if (whichIsLocal == 1) {
+        p1 = new LocalPlayer(1, socket);
+        p2 = new RemotePlayer(2, socket);
+    } else if (whichIsLocal == 2) {
+        p1 = new RemotePlayer(1, socket);
+        p2 = new LocalPlayer(2, socket);
+    }
+
     gameObjects = [level, p1, p2];
     hud = new HUD();
     globalObjects = {level, p1, p2};
