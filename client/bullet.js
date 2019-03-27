@@ -1,6 +1,6 @@
 class Bullet extends GameObject {
 
-    constructor(x, y, dx, dy, firedBy) {
+    constructor(x, y, dx, dy, firedBy, fromRemote) {
         super(firedBy == 2 ? Bullet.sprite2 : Bullet.sprite1);
         this.x = x;
         this.y = y;
@@ -18,6 +18,17 @@ class Bullet extends GameObject {
         }
 
         this.trailPoints = [];
+
+        if (!fromRemote) {
+            socket.emit('newBullet', {
+                x: this.x,
+                y: this.y,
+                dx: this.dx,
+                dy: this.dy,
+                firedBy: this.firedBy,
+                id: this.id
+            });
+        }
     }
 
     tick(dt) {
@@ -43,6 +54,13 @@ class Bullet extends GameObject {
                 return this.destroy();
             }
         }
+
+        this.sendNetworkUpdate(socket, {
+            x: this.x,
+            y: this.y,
+            dx: this.dx,
+            dy: this.dy
+        });
     }
 
     draw() {

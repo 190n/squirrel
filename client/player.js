@@ -64,7 +64,7 @@ class Player extends GameObject {
             let launchAngle = input.shootAngle(this.which);
             let dx = bulletLaunchVelocity * cos(launchAngle),
                 dy = bulletLaunchVelocity * sin(launchAngle);
-            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which));
+            gameObjects.push(new Bullet(this.x, this.y, dx + this.dx, dy + this.dy, this.which, false));
             this.shootTimer = 0;
             this.ammo--;
             this.reloadTimer = -1;

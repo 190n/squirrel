@@ -7,15 +7,14 @@
 class NetworkedPlayer extends Player {}
 
 class LocalPlayer extends NetworkedPlayer {
-    constructor(which, socket) {
+    constructor(which) {
         super(which);
-        this.socket = socket;
     }
 
     tick(dt) {
         Player.prototype.tick.call(this, dt);
         // send updated state to network
-        this.socket.emit('state', {
+        socket.emit('state', {
             which: this.which,
             x: this.x,
             y: this.y,
@@ -35,6 +34,8 @@ class RemotePlayer extends NetworkedPlayer {
         super(which);
         this.socket = socket;
         this.socket.on('state', s => {
+            console.log(s.which);
+
             if (s.which == this.which) {
                 Object.assign(this, s);
             }

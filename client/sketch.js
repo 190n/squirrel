@@ -48,7 +48,14 @@ function setup() {
 
 function startGame() {
     whichIsLocal = parseInt(prompt('Which player is local? (1/2)'));
-    socket = io()
+    socket = io();
+
+    socket.on('update', receiveNetworkUpdate);
+    socket.on('newBullet', b => {
+        bullet = new Bullet(b.x, b.y, b.dx, b.dy, b.firedBy, true);
+        bullet.id = b.id;
+        gameObjects.push(bullet);
+    });
 
     let level = new Level(), p1, p2;
 
@@ -253,6 +260,14 @@ function switchHTPContent(which) {
             content.classList.add('active');
         } else {
             content.classList.remove('active');
+        }
+    }
+}
+
+function receiveNetworkUpdate(u) {
+    for (let go of gameObjects) {
+        if (go.id == u.id) {
+            Object.assign(go, u);
         }
     }
 }

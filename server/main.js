@@ -14,6 +14,14 @@ io.on('connection', socket => {
     socket.on('state', s => {
         socket.broadcast.emit('state', s);
     });
+
+    socket.on('update', u => {
+        socket.broadcast.emit('update', u);
+    });
+
+    socket.on('newBullet', b => {
+        socket.broadcast.emit('newBullet', b);
+    })
 });
 
 server.listen(3000, () => {

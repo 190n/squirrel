@@ -1,6 +1,7 @@
 class GameObject {
     constructor(sprite) {
         this.sprite = sprite;
+        this.id = GameObject.nextID++;
     }
 
     draw(sprite) {
@@ -28,4 +29,14 @@ class GameObject {
     static preload() {
 
     }
+
+    sendNetworkUpdate(socket, data) {
+        let dict = {id: this.id};
+
+        Object.assign(dict, data);
+
+        socket.emit('update', dict);
+    }
 }
+
+GameObject.nextID = 0;
