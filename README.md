@@ -43,8 +43,8 @@ Player 1                 | Player 2
 
 <kbd>ESC</kbd>: pause/unpause
 
-Controller Bindings (two controllers must be connected)
--------------------------------------------------------
+Controller Bindings (two controllers must be connected) (don't work in multiplayer)
+-----------------------------------------------------------------------------------
 
 - <kbd>LT</kbd>: throttle
 - <kbd>LS</kbd>: fly (left/right)
