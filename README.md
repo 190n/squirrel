@@ -1,6 +1,27 @@
 Untitled Squirrel Game
 ======================
 
+This branch contains an early version of online multiplayer. It is error-prone,
+allows cheating, and doesn't synchronize scores, but it does work a little.
+
+To run the server, you will need [Node.js](https://nodejs.org) and
+[npm](https://npmjs.com). First, install dependencies:
+
+```bash
+$ cd server
+$ npm install
+```
+
+Then run `server/main.js`:
+
+```bash
+$ node main.js
+listening on port 3000
+```
+
+Then visit http://localhost:3000/ in two tabs, or on another computer using your
+computer's local IP address. **Both players use the keybindings for player 1.**
+
 You can play [the live version](https://190n.github.io/squirrel), or run it
 locally. It may not work when loaded from the filesystem (file:///) due to
 browsers' security restrictions. If that is the case, run a local file server in

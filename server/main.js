@@ -9,6 +9,9 @@ const app = express(),
 
 app.use(express.static(path.join(__dirname, '../client')));
 
+let p1Sock = null,
+    p2Sock = null;
+
 io.on('connection', socket => {
     console.log('new connection');
     socket.on('state', s => {
@@ -21,7 +24,22 @@ io.on('connection', socket => {
 
     socket.on('newBullet', b => {
         socket.broadcast.emit('newBullet', b);
-    })
+    });
+
+    if (p1Sock === null) {
+        p1Sock = socket;
+        socket.emit('init', {
+            which: 1,
+            isReady: false
+        });
+    } else if (p2Sock === null) {
+        p2Sock = socket;
+        socket.emit('init', {
+            which: 2,
+            isReady: true
+        });
+        p1Sock.emit('ready');
+    }
 });
 
 server.listen(3000, () => {

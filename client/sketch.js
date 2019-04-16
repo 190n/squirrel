@@ -18,7 +18,9 @@ let gameObjects = [],
     p2WinCount = 0,
     ignoreLosses = false,
     paused = false,
-    socket;
+    socket,
+    whichIsLocal = 0,
+    allPlayersConnected = false;
 
 p5.disableFriendlyErrors = true;
 
@@ -43,12 +45,18 @@ function setup() {
     wcDisplay.timer = -1;
     input = new LocalKBDInput();
     frameRate(1200);
-    startGame();
-}
 
-function startGame() {
-    whichIsLocal = parseInt(prompt('Which player is local? (1/2)'));
     socket = io();
+
+    socket.on('init', data => {
+        whichIsLocal = data.which;
+
+        if (data.isReady) {
+            startGame();
+        } else {
+            socket.on('ready', startGame);
+        }
+    });
 
     socket.on('update', receiveNetworkUpdate);
     socket.on('newBullet', b => {
@@ -56,6 +64,10 @@ function startGame() {
         bullet.id = b.id;
         gameObjects.push(bullet);
     });
+}
+
+function startGame() {
+    allPlayersConnected = true;
 
     let level = new Level(), p1, p2;
 
@@ -85,6 +97,15 @@ function draw() {
 
     input.tick(dt);
     countdown.tick(dt);
+
+    if (allPlayersConnected == false) {
+        fill(0);
+        textFont(font04b03);
+        textSize(256);
+        textAlign(CENTER, CENTER);
+        text('WAITING', windowWidth / 2, windowHeight * 0.3);
+        return;
+    }
 
     if (gameStarted) {
         camera.move();

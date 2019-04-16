@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/190n/squirrel.git"
+  },
+  "author": "190n",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/190n/squirrel/issues"
+  },
+  "homepage": "https://github.com/190n/squirrel#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  }
+}
