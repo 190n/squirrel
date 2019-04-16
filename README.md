@@ -22,11 +22,6 @@ listening on port 3000
 Then visit http://localhost:3000/ in two tabs, or on another computer using your
 computer's local IP address. **Both players use the keybindings for player 1.**
 
-You can play [the live version](https://190n.github.io/squirrel), or run it
-locally. It may not work when loaded from the filesystem (file:///) due to
-browsers' security restrictions. If that is the case, run a local file server in
-the directory with the game files and connect to it.
-
 Basic Info
 ----------
 
